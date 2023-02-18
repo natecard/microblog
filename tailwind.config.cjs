@@ -5,12 +5,10 @@ module.exports = {
     fontFamily: {
       base: ['"Montserrat"', 'Helvetica'],
     },
-    extend: {
-      backgroundImage: {
-        'gradient-conic':
-          'conic-gradient(var(--conic-position), var(--tw-gradient-stops))',
-      },
-    },
+    extend: {},
   },
-  plugins: [],
+  plugins: [require('daisyui')],
+  daisyui: {
+    themes: ['corporate'],
+  },
 };
