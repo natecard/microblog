@@ -3,7 +3,7 @@ module.exports = {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     fontFamily: {
-      base: ['"Montserrat"', 'Helvetica'],
+      base: ['"Jost"', 'Helvetica'],
     },
     extend: {},
   },

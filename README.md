@@ -1,4 +1,4 @@
-Microblogging
+Microblog
 Using TypeScript, React, Tailwind...
 
 Introducing our revolutionary microblogging service, the perfect platform for those who have a lot to say, but don't want to take up too much space. With our service, you can share your thoughts, ideas, and musings with your followers in bite-sized posts.
