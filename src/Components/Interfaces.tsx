@@ -7,7 +7,6 @@ export interface microblog {
   like: Function;
   boost: Function;
 }
-
 export interface user {
   displayName: string;
   uid: string;

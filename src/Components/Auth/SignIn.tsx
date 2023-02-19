@@ -61,9 +61,8 @@ export default function SignIn(props: user) {
       });
   };
   onAuthStateChanged(auth, (user) => {
-    if (user) {
+    if (user !== null) {
       setUser(user.uid);
-      console.log(user);
       console.log(user.photoURL);
     } else {
       //User is signed out

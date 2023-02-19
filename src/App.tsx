@@ -5,9 +5,12 @@ import { Route, Routes } from 'react-router-dom';
 import { initializeApp } from 'firebase/app';
 import { getAuth, User } from 'firebase/auth';
 import SignIn from './Components/Auth/SignIn';
-import { microblog } from './Components/Interfaces';
+import { microblog, user } from './Components/Interfaces';
 import Header from './Components/Header';
-import { SignOut } from './Components/Auth/SignOut';
+import { SignOutButton } from './Components/Auth/SignOut';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import Container from './Components/Container';
+
 // import { getAnalytics } from 'firebase/analytics';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -25,17 +28,19 @@ const firebaseConfig = {
 export const Context = createContext<any>([]);
 export const MicroBlogger = initializeApp(firebaseConfig);
 export const auth = getAuth(MicroBlogger);
+export const db = getFirestore();
+
 // const analytics = getAnalytics(MicroBlog);
 
 // Initialize Firebase
 export default function App() {
-  const [user, setUser] = useState<user[]>([]);
+  const [username, setUsername] = useState<user[]>([]);
   const [microblog, setMicroBlog] = useState<microblog[]>([]);
   return (
     <Context.Provider
       value={{
-        user,
-        setUser,
+        username,
+        setUsername,
         microblog,
         setMicroBlog,
       }}
@@ -44,11 +49,20 @@ export default function App() {
       {/* <Route path="/" element={Timeline}></Route> */}
       {/* </Routes> */}
       <div>
-        <Header user={user} />
+        <Header username={username} />
         <div>
           <h2>Hello World</h2>
-          <SignIn />
-          <SignOut />
+          <SignIn
+            displayName={user.displayName}
+            uid={user.uid}
+            photoUrl={user.photoUrl}
+          />
+          <SignOutButton />
+          <Container
+            displayName={user.displayName}
+            uid={user.uid}
+            photoUrl={user.photoUrl}
+          />
         </div>
       </div>
     </Context.Provider>
