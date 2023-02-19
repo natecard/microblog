@@ -9,6 +9,13 @@
     },
     "ui": {
       "enabled": true
+    },
+    "hosting": {
+      "port": 5002
     }
+  },
+  "hosting": {
+    "source": ".",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
   }
 }
