@@ -12,7 +12,7 @@ import { auth } from '../../firebase';
 export function SignIn() {
   const { user, setUser } = useContext(Context);
   const provider = new GoogleAuthProvider();
-  const googleSignIn = async (e: { preventDefault: () => void }) => {
+  const googleSignIn = async (e: any) => {
     e.preventDefault();
     await signInWithRedirect(auth, provider)
       .then(() => {})
@@ -22,7 +22,7 @@ export function SignIn() {
       });
   };
 
-  const anonSignIn = async (e: { preventDefault: () => void }) => {
+  const anonSignIn = async (e: any) => {
     e.preventDefault();
     await signInAnonymously(auth)
       .then(() => {
@@ -37,18 +37,17 @@ export function SignIn() {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       // User is signed in!
-      const uid = user.uid;
+      setUser(auth.currentUser);
     }
     console.log(user);
   });
-  setUser(auth.currentUser);
   return (
     <div>
       <button onClick={googleSignIn} type="button" className="btn normal-case">
         Sign In With Google
       </button>
       <button onClick={anonSignIn} type="button" className="btn normal-case">
-        Sign In With Google
+        Sign In Anonymously
       </button>
     </div>
   );

@@ -7,11 +7,12 @@ import Header from './Components/Header';
 import SignOutButton from './Components/Auth/SignOutUser';
 import Timeline from './Components/Timeline';
 import { auth } from './firebase';
+import { User } from 'firebase/auth';
 
 export const Context = createContext<any>([]);
 
 export default function App() {
-  const [user, setUser] = useState<userInfo[]>([]);
+  const [user, setUser] = useState<User[]>([]);
   const [post, setPost] = useState<post[]>([]);
   const [posts, setPosts] = useState<post[]>([]);
   function likePost(id: any) {
@@ -24,6 +25,11 @@ export default function App() {
     //   post.filter(id) => post.id
     // })
   }
+  useEffect(() => {
+    if (auth.currentUser !== null) {
+      return setUser([auth.currentUser]);
+    }
+  }, [auth]);
   // user.map((user: userInfo) => {
   //   (user.uid = user.uid),
   //     (user.displayName = user.displayName),
