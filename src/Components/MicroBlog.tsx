@@ -1,15 +1,15 @@
 import React from 'react';
-import { microblog } from './Interfaces';
+import { post } from './Interfaces';
 
-export default function MicroBlog(props: microblog) {
+export default function MicroBlog(props: post) {
   return (
     <div id={props.id}>
       <div>
         <h2>{props.author}</h2>
-        <p>{props.post}</p>
+        <p>{props.content}</p>
       </div>
       <div>
-        <button onClick={() => props.like()} className="btn gap-2">
+        <button onClick={() => props.likePost} className="btn gap-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"

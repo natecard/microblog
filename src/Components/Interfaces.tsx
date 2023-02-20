@@ -1,14 +1,15 @@
-export interface microblog {
+export interface post {
   id: string;
   author: string;
   title: string;
   image: string;
-  post: string;
-  like: Function;
-  boost: Function;
+  content: string;
+  likePost: Function;
+  boostPost: Function;
 }
-export interface user {
+export interface userInfo {
   displayName: string;
   uid: string;
-  photoUrl: string;
+  profilePic: string;
+  email: string;
 }
