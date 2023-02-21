@@ -2,7 +2,7 @@ export interface post {
   id: string;
   author: string;
   title: string;
-  image: string;
+  profilePic: string;
   content: string;
   likePost: Function;
   boostPost: Function;
