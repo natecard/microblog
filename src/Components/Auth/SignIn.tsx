@@ -39,8 +39,8 @@ export function SignIn() {
       // User is signed in!
       setUser(auth.currentUser);
     }
-    console.log(user);
   });
+  console.log(user);
   return (
     <div>
       <button onClick={googleSignIn} type="button" className="btn normal-case">

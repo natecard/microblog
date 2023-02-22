@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import { post, userInfo } from './Interfaces';
 import { Context } from '../App';
@@ -6,7 +6,10 @@ import {
   addDoc,
   collection,
   getFirestore,
+  limit,
   onSnapshot,
+  orderBy,
+  query,
   serverTimestamp,
 } from 'firebase/firestore';
 import MicroBlog from './MicroBlog';
@@ -20,6 +23,7 @@ export default function Timeline() {
     user,
     setUser,
     post,
+    setPostsArray,
     likePost,
     boostPost,
     postsArray,
@@ -33,6 +37,7 @@ export default function Timeline() {
     likePost: Function;
     boostPost: Function;
     postsArray: any[];
+    setPostsArray: any;
     postText: string;
     setPostText: any;
     handlePostChange: Function;
@@ -40,12 +45,12 @@ export default function Timeline() {
   async function savePost(string: string) {
     try {
       await addDoc(collection(db, 'posts'), {
-        id: serverTimestamp(),
+        timestamp: serverTimestamp(),
         author: user.displayName,
         profilePic: user.photoURL,
         content: postText,
-        // likePost: likePost(),
-        // boostPost: boostPost(),
+        likes: 0,
+        id: serverTimestamp(),
       });
       console.log('sent');
     } catch (error) {
@@ -53,37 +58,74 @@ export default function Timeline() {
     }
   }
 
-  // onSnapshot(userRef, (snapshot) => {
-  //   const blog = snapshot.docs.map((d) => d.data());
-  //   const uiList = blog.map((post) => {
-  //     return (
-  //       <MicroBlog
-  //         id={post.id}
-  //         author={post.author}
-  //         title={post.title}
-  //         image={post.image}
-  //         content={post.content}
-  //         likePost={() => likePost()}
-  //         boostPost={() => boostPost()}
-  //       />
+  // function loadPosts() {
+  //   try {
+  //     const postQuery = query(
+  //       collection(db, 'posts'),
+  //       orderBy('timestamp', 'desc'),
+  //       limit(20)
   //     );
+  //   } catch (error) {
+  //     console.error('Error retrieving posts from Firebase Database', error);
+  //   }
+  //   try {
+  //     onSnapshot(postQuery, (snapshot) => {
+  //       snapshot.docChanges().forEach(function (change) {
+  //         // if (change.type === 'removed') {
+  //         //   deletePost(change.doc.id);
+  //         // } else
+  //         {
+  //           let post = change.doc.data();
+  //           displayPosts(
+  //             change.doc.id,
+  //             post.timestamp,
+  //             post.displayName,
+  //             post.content,
+  //             post.profilePic,
+  //             post.imageUrl
+  //           );
+  //         }
+  //       });
+  //     });
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
+  // function displayPosts(
+  //   id: string,
+  //   timestamp: string,
+  //   displayName: any,
+  //   content: any,
+  //   profilePic: any,
+  //   imageUrl: any
+  // ) {
+  //   postsArray.map((post: post) => {
+  //     <MicroBlog
+  //       id={post.id}
+  //       author={post.author}
+  //       title={post.title}
+  //       profilePic={post.profilePic}
+  //       content={post.content}
+  //       likes={0}
+  //       timestamp={post.id}
+  //       likePost={likePost()}
+  //     />;
   //   });
-  // });
+  // }
+
+  // function deletePost(id: string) {}
 
   return (
     <div>
       <div>
         <h1>Hi</h1>
-        <div
-          id="messages-card"
-          className="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--6-col-tablet mdl-cell--6-col-desktop"
-        >
-          <div className="mdl-card__supporting-text mdl-color-text--grey-600">
+        <div id="messages-card" className="">
+          <div className="">
             <div id="messages"></div>
             <form>
               <div>
                 <label className="" htmlFor="post">
-                  Message...
+                  Post
                 </label>
                 <input
                   onChange={(event) => setPostText(event.target.value)}

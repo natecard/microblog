@@ -6,10 +6,11 @@ export default function MicroBlog(props: post) {
     <div id={props.id}>
       <div>
         <h2>{props.author}</h2>
-        <p>{props.content}</p>
+        <img src={props.profilePic} />
       </div>
+      <p>{props.content}</p>
       <div>
-        <button onClick={() => props.likePost} className="btn gap-2">
+        <button onClick={() => props.likePost()} className="btn gap-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"
