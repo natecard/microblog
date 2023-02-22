@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, User } from 'firebase/auth';
-import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { getFirestore, initializeFirestore } from 'firebase/firestore';
 import { getAnalytics } from 'firebase/analytics';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -16,5 +16,9 @@ const firebaseConfig = {
 
 export const MicroBlogger = initializeApp(firebaseConfig);
 export const auth = getAuth(MicroBlogger);
-export const db = getFirestore();
+const database = initializeFirestore(MicroBlogger, {
+  experimentalAutoDetectLongPolling: true,
+  useFetchStreams: false,
+})
+export const db = getFirestore(MicroBlogger);
 // const analytics = getAnalytics(MicroBlog);
