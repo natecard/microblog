@@ -12,7 +12,7 @@ export default function Header(props: userInfo) {
     <div className="navbar bg-base-100">
       <div className="flex-1">
         <Link to="/Timeline">
-          <a className="btn btn-ghost uppercase text-2xl">subforuma</a>
+          <p className="btn btn-ghost uppercase text-2xl">subforuma</p>
         </Link>
         {user.displayName !== undefined ? (
           <h1>{`Hi, ${user.displayName}`}</h1>
@@ -37,7 +37,7 @@ export default function Header(props: userInfo) {
                 <img src={user.profilePic} />
               ) : (
                 <Link to="/">
-                  <a className="btn btn-ghost uppercase text-2xl">Sign In</a>
+                  <p className="btn btn-ghost uppercase text-2xl">Sign In</p>
                 </Link>
               )}
             </div>
@@ -47,17 +47,17 @@ export default function Header(props: userInfo) {
             className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52"
           >
             <li>
-              <a className="justify-between">
+              <p className="justify-between">
                 Profile
                 <span className="badge">New</span>
-              </a>
+              </p>
             </li>
             <li>
-              <a>Settings</a>
+              <p>Settings</p>
             </li>
             <li onClick={() => supabase.auth.signOut()}>
               <Link to="/">
-                <a>Logout</a>
+                <p>Logout</p>
               </Link>
             </li>
           </ul>

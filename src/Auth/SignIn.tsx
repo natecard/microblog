@@ -8,11 +8,7 @@ export default function SignIn() {
   supabase.auth.onAuthStateChange((event, session) => {
     if (event == 'SIGNED_IN') console.log(session);
   });
-  async function userSetting() {
-    const { data, error } = await supabase.auth.getSession();
-    if (error) console.log(error);
-    else setSessionInfo(data);
-  }
+
   useEffect(() => {
     fetchUserData();
   }, []);

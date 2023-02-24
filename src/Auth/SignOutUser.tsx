@@ -3,12 +3,16 @@ import { Context } from '../App';
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 export default function SignOutUser() {
-  const { user } = useContext(Context);
+  const { user, setUser } = useContext(Context);
   async function signOutActiveUser() {
     // Sign out of Supabase.
-    if (user !== null) {
-      const { error } = await supabase.auth.signOut();
+    if (user !== null || undefined) {
       console.log('logged out');
+      sessionStorage.clear();
+      console.log('sessionStorage cleared');
+      localStorage.removeItem('user');
+      const { error } = await supabase.auth.signOut();
+      setUser(null);
     } else {
       console.log('No one is signed in!');
     }

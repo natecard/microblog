@@ -2,9 +2,8 @@ import React, { useContext, useEffect } from 'react';
 import { post, userInfo } from './Interfaces';
 import { Context } from '../App';
 import MicroBlog from './MicroBlog';
-import { supabase, AuthUi, authTheme } from '../supabaseClient';
+import { supabase } from '../supabaseClient';
 import SignOutUser from '../Auth/SignOutUser';
-import { nanoid } from 'nanoid';
 
 export default function Timeline() {
   const {
@@ -39,16 +38,18 @@ export default function Timeline() {
   //   }
   // }
   async function savePost(string: string) {
-    const { data: posts, error } = await supabase.from('posts').insert({
-      timestamp: '',
-      profilePic: user.profilePic,
-      content: postText,
-      author: user.displayName,
-      likes: 0,
-      uuid: nanoid(),
-    });
+    const { data: posts, error } = await supabase
+      .from('posts')
+      .insert([
+        { profilePic: user.profilePic },
+        { content: postText },
+        { author: user.displayName },
+      ]);
+    const handleInserts = (payload) => {
+      console.log('Change received!', payload);
+    };
+    await supabase.from('posts').on('INSERT', handleInserts).subscribe();
   }
-
   // function displayPosts(
   //   id: string,
   //   timestamp: string,

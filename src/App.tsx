@@ -11,7 +11,6 @@ import Landing from './Auth/SignIn';
 export const Context = createContext<any>([]);
 
 export default function App() {
-  const [user, setUser] = useState<userInfo[]>([]);
   const [profilePic, setProfilePic] = useState('');
   const [uuid, setUuid] = useState('');
   const [post, setPost] = useState<post[]>([]);
@@ -19,6 +18,21 @@ export default function App() {
   const [sessionInfo, setSessionInfo] = useState<any>([]);
   const [postsArray, setPostsArray] = useState<any[]>([]);
   const [postText, setPostText] = useState('');
+
+  const [user, setUser] = useState(
+    () =>
+      JSON.parse(sessionStorage.getItem('user')) || [
+        {
+          name: '',
+          email: '',
+          profilePic: '',
+        },
+      ]
+  );
+  useEffect(() => {
+    sessionStorage.setItem('user', JSON.stringify(user));
+  }, [user]);
+
   function likePost(id: any) {
     // posts.map((post)=>{
     //   post.filter(id) => post.id

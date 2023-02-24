@@ -11,7 +11,6 @@ export interface post {
 }
 export interface userInfo {
   displayName: string;
-  uid: string;
   profilePic: string;
   email: string;
 }
