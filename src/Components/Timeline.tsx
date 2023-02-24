@@ -18,7 +18,7 @@ export default function Timeline() {
     setPostText,
     postText,
   } = useContext(Context) as {
-    user: userInfo[];
+    user: any[];
     post: post[];
     likePost: Function;
     boostPost: Function;
