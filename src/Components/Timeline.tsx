@@ -1,27 +1,14 @@
 import React, { useContext, useEffect } from 'react';
-
 import { post, userInfo } from './Interfaces';
 import { Context } from '../App';
-import {
-  addDoc,
-  collection,
-  getFirestore,
-  limit,
-  onSnapshot,
-  orderBy,
-  query,
-  serverTimestamp,
-} from 'firebase/firestore';
 import MicroBlog from './MicroBlog';
-import { auth, db } from '../firebase';
-import Header from './Header';
-import { SignIn } from './Auth/SignIn';
-import SignOutUser from './Auth/SignOutUser';
+import { supabase, AuthUi, authTheme } from '../supabaseClient';
+import SignOutUser from '../Auth/SignOutUser';
+import { nanoid } from 'nanoid';
 
 export default function Timeline() {
   const {
     user,
-    setUser,
     post,
     setPostsArray,
     likePost,
@@ -31,8 +18,7 @@ export default function Timeline() {
     setPostText,
     postText,
   } = useContext(Context) as {
-    user: any;
-    setUser: any;
+    user: userInfo[];
     post: post[];
     likePost: Function;
     boostPost: Function;
@@ -42,55 +28,27 @@ export default function Timeline() {
     setPostText: any;
     handlePostChange: Function;
   };
-  async function savePost(string: string) {
-    try {
-      await addDoc(collection(db, 'posts'), {
-        timestamp: serverTimestamp(),
-        author: user.displayName,
-        profilePic: user.photoURL,
-        content: postText,
-        likes: 0,
-        id: serverTimestamp(),
-      });
-      console.log('sent');
-    } catch (error) {
-      console.error('Error writing new post to Firebase Database', error);
-    }
-  }
-
-  // function loadPosts() {
+  // async function loadPost(string: string) {
   //   try {
-  //     const postQuery = query(
-  //       collection(db, 'posts'),
-  //       orderBy('timestamp', 'desc'),
-  //       limit(20)
-  //     );
+  //     const { data, error } = await supabase
+  //       .from('posts')
+  //       .select('timestamp, author, profilePic, content, likes, id');
+  //     console.log('loading...');
   //   } catch (error) {
-  //     console.error('Error retrieving posts from Firebase Database', error);
-  //   }
-  //   try {
-  //     onSnapshot(postQuery, (snapshot) => {
-  //       snapshot.docChanges().forEach(function (change) {
-  //         // if (change.type === 'removed') {
-  //         //   deletePost(change.doc.id);
-  //         // } else
-  //         {
-  //           let post = change.doc.data();
-  //           displayPosts(
-  //             change.doc.id,
-  //             post.timestamp,
-  //             post.displayName,
-  //             post.content,
-  //             post.profilePic,
-  //             post.imageUrl
-  //           );
-  //         }
-  //       });
-  //     });
-  //   } catch (error) {
-  //     console.error(error);
+  //     console.error('Error writing new post to Supabase Database', error);
   //   }
   // }
+  async function savePost(string: string) {
+    const { data: posts, error } = await supabase.from('posts').insert({
+      timestamp: '',
+      profilePic: user.profilePic,
+      content: postText,
+      author: user.displayName,
+      likes: 0,
+      uuid: nanoid(),
+    });
+  }
+
   // function displayPosts(
   //   id: string,
   //   timestamp: string,
@@ -118,10 +76,10 @@ export default function Timeline() {
   return (
     <div>
       <div>
-        <h1>Hi</h1>
-        <div id="messages-card" className="">
+        <h1>{`Hi, ${user.displayName}`}</h1>
+        <div id="post-card" className="">
           <div className="">
-            <div id="messages"></div>
+            <div id="posts"></div>
             <form>
               <div>
                 <label className="" htmlFor="post">
@@ -142,7 +100,6 @@ export default function Timeline() {
             </form>
           </div>
         </div>
-        <SignIn />
       </div>
       <SignOutUser />
     </div>

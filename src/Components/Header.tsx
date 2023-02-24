@@ -1,16 +1,26 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
+import { Link, Path } from 'react-router-dom';
 import { userInfo } from './Interfaces';
-import { auth } from '../firebase';
 import { Context } from '../App';
+import { supabase } from '../supabaseClient';
+import SignOutUser from '../Auth/SignOutUser';
 
 export default function Header(props: userInfo) {
   const { user, setUser } = useContext(Context);
-  setUser(auth.currentUser);
+
   return (
     <div className="navbar bg-base-100">
       <div className="flex-1">
-        <a className="btn btn-ghost uppercase text-2xl">subforuma</a>
+        <Link to="/Timeline">
+          <a className="btn btn-ghost uppercase text-2xl">subforuma</a>
+        </Link>
+        {user.displayName !== undefined ? (
+          <h1>{`Hi, ${user.displayName}`}</h1>
+        ) : (
+          <></>
+        )}
       </div>
+
       <div className="flex-none gap-2">
         <div className="form-control">
           <input
@@ -23,23 +33,12 @@ export default function Header(props: userInfo) {
         <div className="dropdown dropdown-end">
           <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
             <div className="w-10 rounded-full">
-              {auth.currentUser !== null ? (
-                <img src={user.photoURL} />
+              {user !== null || undefined ? (
+                <img src={user.profilePic} />
               ) : (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                  />
-                </svg>
+                <Link to="/">
+                  <a className="btn btn-ghost uppercase text-2xl">Sign In</a>
+                </Link>
               )}
             </div>
           </label>
@@ -56,8 +55,10 @@ export default function Header(props: userInfo) {
             <li>
               <a>Settings</a>
             </li>
-            <li>
-              <a>Logout</a>
+            <li onClick={() => supabase.auth.signOut()}>
+              <Link to="/">
+                <a>Logout</a>
+              </Link>
             </li>
           </ul>
         </div>

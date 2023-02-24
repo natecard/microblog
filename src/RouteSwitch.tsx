@@ -1,9 +1,9 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 
 export default function RouteSwitch() {
   return (
-    <BrowserRouter basename="/microblog">
+    <BrowserRouter basename="/">
       <App />
     </BrowserRouter>
   );
