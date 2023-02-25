@@ -3,7 +3,7 @@ import { post } from './Interfaces';
 
 export default function MicroBlog(props: post) {
   return (
-    <div id={props.id}>
+    <div className="" id={props.uuid}>
       <div>
         <h2>{props.author}</h2>
         <img src={props.profilePic} />

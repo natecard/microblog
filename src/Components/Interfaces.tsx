@@ -1,8 +1,7 @@
 export interface post {
   likePost(): void;
-  id: string;
+  uuid: string;
   author: string;
-  title: string;
   profilePic: string;
   content: string;
   likes: number;

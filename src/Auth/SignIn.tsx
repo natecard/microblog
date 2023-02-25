@@ -11,7 +11,7 @@ export default function SignIn() {
 
   useEffect(() => {
     fetchUserData();
-  }, []);
+  }, [user]);
   async function fetchUserData() {
     try {
       const data = await supabase.auth.getUser();

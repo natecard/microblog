@@ -1,9 +1,10 @@
-import React, { useContext, useEffect } from 'react';
+import React, { ReactEventHandler, useContext, useEffect } from 'react';
 import { post, userInfo } from './Interfaces';
 import { Context } from '../App';
 import MicroBlog from './MicroBlog';
 import { supabase } from '../supabaseClient';
 import SignOutUser from '../Auth/SignOutUser';
+import { nanoid } from 'nanoid';
 
 export default function Timeline() {
   const {
@@ -17,7 +18,7 @@ export default function Timeline() {
     setPostText,
     postText,
   } = useContext(Context) as {
-    user: any[];
+    user: userInfo[];
     post: post[];
     likePost: Function;
     boostPost: Function;
@@ -37,19 +38,44 @@ export default function Timeline() {
   //     console.error('Error writing new post to Supabase Database', error);
   //   }
   // }
-  async function savePost(string: string) {
-    const { data: posts, error } = await supabase
-      .from('posts')
-      .insert([
-        { profilePic: user.profilePic },
-        { content: postText },
-        { author: user.displayName },
-      ]);
-    const handleInserts = (payload) => {
-      console.log('Change received!', payload);
-    };
-    await supabase.from('posts').on('INSERT', handleInserts).subscribe();
+  async function savePost(event: any) {
+    event.preventDefault();
+    const { data, error } = await supabase.from('posts').insert([
+      {
+        content: postText,
+        uuid: nanoid(),
+        author: user.displayName,
+        likes: 0,
+        profilePic: user.profilePic,
+      },
+    ]);
+    console.error(error);
+    if (data) {
+      setPostText('');
+    }
   }
+  useEffect(() => {
+    async function fetchPosts() {
+      const { data, error } = await supabase
+        .from('posts')
+        .select('*')
+        .order('timestamp', { ascending: false });
+      if (data) {
+        setPostsArray(data);
+      }
+    }
+    fetchPosts();
+  }, []);
+  // const { data, error } = await supabase.from('posts').insert({
+  // profilePic: user.profilePic,
+  // content: postText,
+  // author: user.displayName,
+  // });
+  // const handleInserts = (payload: any) => {
+  //   console.log('Change received!', payload);
+  // };
+  // await supabase.from('posts').on('INSERT', handleInserts).subscribe();
+
   // function displayPosts(
   //   id: string,
   //   timestamp: string,
@@ -95,10 +121,28 @@ export default function Timeline() {
                   autoComplete="off"
                 />
               </div>
-              <button onClick={() => savePost(postText)} className="">
+              <button onClick={(e) => savePost(e)} className="">
                 Send
               </button>
             </form>
+            <div id="posts">
+              {postsArray.map((post) => {
+                return (
+                  <MicroBlog
+                    key={post.uuid}
+                    likePost={function (): void {
+                      throw new Error('Function not implemented.');
+                    }}
+                    uuid={post.uuid}
+                    author={post.author}
+                    profilePic={post.profilePic}
+                    content={post.content}
+                    likes={0}
+                    timestamp={post.timestamp}
+                  />
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
