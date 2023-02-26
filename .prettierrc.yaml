@@ -1,9 +1,14 @@
-printWidth: 80
-tabWidth: 2
-useTabs: true
-semi: true
-singleQuote: true
+
+
+
+
 trailingComma: es5
-bracketSpacing: false
-jsxBracketSameLine: false
-arrowParens: avoid
+
+	tabWidth: 2
+	semi: true
+	singleQuote: true
+	printWidth: 80
+	useTabs: true
+	bracketSpacing: false
+	jsxBracketSameLine: false
+	arrowParens: avoid
