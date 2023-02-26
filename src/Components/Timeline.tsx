@@ -102,30 +102,29 @@ export default function Timeline() {
 
 	return (
 		<div className="w-screen">
-			<div>
-				<h1>{`Hi, ${user.displayName}`}</h1>
-				<div id="post-card" className="">
-					<div className="">
-						<div id="posts"></div>
-						<form>
-							<div>
-								<label className="" htmlFor="post">
-									Post
-								</label>
-								<input
-									onChange={event => setPostText(event.target.value)}
-									className=""
-									id="post"
-									value={postText}
-									type="text"
-									autoComplete="off"
-								/>
-							</div>
-							<button onClick={e => savePost(e)} className="">
-								Send
-							</button>
-						</form>
-						<div className="flex flex-col items-center px-32">
+			<div className="px-3">
+				<div className="">
+					<form>
+						<div className="flex flex-col">
+							<label className="" htmlFor="post">
+								Make post
+							</label>
+							<textarea
+								onChange={event => setPostText(event.target.value)}
+								className=""
+								id="post"
+								value={postText}
+								autoComplete="off"
+							/>
+						</div>
+
+						<button onClick={e => savePost(e)} className="">
+							Send
+						</button>
+					</form>
+					<div id="post-card" className="md:px-24 pt-5">
+						<h1>{`Hi, ${user.displayName} check out what is happening...`}</h1>
+						<div className="flex flex-col items-center md:px-32">
 							{postsArray.map(post => {
 								return (
 									<MicroBlog
