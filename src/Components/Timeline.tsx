@@ -101,48 +101,44 @@ export default function Timeline() {
 	// function deletePost(id: string) {}
 
 	return (
-		<div className="w-screen sm:w-fit dark:text-white text-black">
-			<div className="px-3">
-				<div className="">
-					<form>
-						<div className="flex items-center flex-col">
-							<label className="" htmlFor="post">
-								Make post
-							</label>
-							<textarea
-								onChange={event => setPostText(event.target.value)}
-								className="w-1/2"
-								id="post"
-								value={postText}
-								autoComplete="off"
-							/>
+		<div className="flex px-2 md:px-32 flex-col justify-center w-screen dark:text-white text-black">
+			<form>
+				<div className="flex mt-3 items-center flex-col">
+					<label className="" htmlFor="post">
+						Make post
+					</label>
+					<textarea
+						onChange={event => setPostText(event.target.value)}
+						className="md:w-1/2 w-5/6 dark:bg-black dark:border-white border dark:text-white text-black"
+						id="post"
+						value={postText}
+						autoComplete="off"
+					/>
 
-							<button onClick={e => savePost(e)} className="">
-								Send
-							</button>
-						</div>
-					</form>
-					<div id="post-card" className="md:px-24 text-2xl pt-5">
-						<h1>{`Hi, ${user.displayName} check out what is happening...`}</h1>
-						<div className="flex flex-col items-center md:px-32">
-							{postsArray.map(post => {
-								return (
-									<MicroBlog
-										key={post.uuid}
-										likePost={function (): void {
-											throw new Error('Function not implemented.');
-										}}
-										uuid={post.uuid}
-										author={post.author}
-										profilePic={post.profilePic}
-										content={post.content}
-										likes={0}
-										timestamp={post.timestamp}
-									/>
-								);
-							})}
-						</div>
-					</div>
+					<button onClick={e => savePost(e)} className="">
+						Send
+					</button>
+				</div>
+			</form>
+			<div id="post-card" className="flex-col flex items-center text-2xl pt-5">
+				<h1>{`Hi, ${user.displayName} check out what is happening...`}</h1>
+				<div className="flex flex-col lg:w-[50rem] ">
+					{postsArray.map(post => {
+						return (
+							<MicroBlog
+								key={post.uuid}
+								likePost={function (): void {
+									throw new Error('Function not implemented.');
+								}}
+								uuid={post.uuid}
+								author={post.author}
+								profilePic={post.profilePic}
+								content={post.content}
+								likes={0}
+								timestamp={post.timestamp}
+							/>
+						);
+					})}
 				</div>
 			</div>
 		</div>

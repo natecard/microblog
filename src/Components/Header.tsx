@@ -20,7 +20,8 @@ export default function Header(props: userInfo) {
 		top-0
 		flex
 		justify-items-stretch
-		drop-shadow-md"
+		shadow-md
+		dark:shadow-white/40"
 		>
 			<div className="flex-1">
 				<Link to="/Timeline">
@@ -35,7 +36,7 @@ export default function Header(props: userInfo) {
 						<input
 							type="text"
 							placeholder="Search"
-							className="input md:mx-9 lg:mx-14  input-bordered"
+							className="input md:mx-9 lg:mx-14 dark:bg-black dark:text-white dark:border-white border text-black  input-bordered"
 						/>
 					</div>
 				</div>
@@ -45,7 +46,7 @@ export default function Header(props: userInfo) {
 							{user !== null || undefined ? (
 								<img src={user.profilePic} />
 							) : (
-								<Link to="/">
+								<Link to="/home">
 									<p className="btn btn-ghost uppercase text-2xl">Sign In</p>
 								</Link>
 							)}

@@ -23,7 +23,7 @@ export default function SignOutUser() {
 			type="button"
 			className="btn dark:bg-black dark:text-white text-black bg-white normal-case"
 		>
-			<Link to="/Home"> Log Out</Link>
+			<Link to="/home"> Log Out</Link>
 		</button>
 	);
 }

@@ -4,22 +4,7 @@ import {post} from './Interfaces';
 export default function MicroBlog(props: post) {
 	return (
 		<div
-			className="
-      grid 
-      grid-cols-3 
-      max-h-96 
-      lg:px-16  
-      min-w-full
-      md:w-[40rem] 
-      lg:w-[50rem]
-      m-4
-      rounded-md 
-      border-solid 
-      border 
-      bg-white 
-      text-black
-			dark:bg-black
-			dark:text-white"
+			className="grid	grid-cols-3	md:max-h-96	lg:px-16 md:min-w-fit md:max-w-full min-w-full my-4 md:mx-4	rounded-md border-solid border shadow-md dark:shadow-white/70 bg-white text-black dark:bg-black dark:text-white"
 			id={props.uuid}
 		>
 			<div className="flex pl-4 pt-2 items-center justify-start col-start-1 md:col-start-1 col-span-3 row-start-1 row-span-1 flex-row">
@@ -34,10 +19,10 @@ export default function MicroBlog(props: post) {
 			<p className="row-start-2 row-span-2 p-2 col-start-1 pl-3 col-span-3 text-left flex font-medium text-xl md:font-light md:text-2xl lg:font-light lg:text-3xl">
 				{props.content}
 			</p>
-			<div className="row-start-4 col-span-3 flex place-content-between items-center col-start-1 pb-3">
+			<div className="row-start-4 col-span-3 flex place-content-evenly pb-2 items-center col-start-1">
 				<button
 					onClick={() => props.likePost()}
-					className="btn border-0 text-black md:text-xl lg:text-2xl bg-white dark:bg-black dark:text-white gap-2"
+					className="flex flex-row uppercase rounded-md p-2 text-sm font-semibold items-center text-black md:text-xl lg:text-2xl bg-white hover:scale-110 dark:bg-black dark:text-white gap-2"
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -56,8 +41,8 @@ export default function MicroBlog(props: post) {
 					Like
 				</button>{' '}
 				<button
-					onClick={() => props.likePost()}
-					className="btn border-0 text-black bg-white dark:bg-black dark:text-white gap-2"
+					onClick={() => props.boostPost()}
+					className="flex flex-row uppercase rounded-md p-2 text-sm font-semibold items-center text-black md:text-xl lg:text-2xl bg-white dark:bg-black dark:text-white hover:animate-pulse gap-2"
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -76,8 +61,8 @@ export default function MicroBlog(props: post) {
 					Boost
 				</button>{' '}
 				<button
-					onClick={() => props.likePost()}
-					className="btn border-0 text-black bg-white dark:bg-black dark:text-white gap-2"
+					onClick={() => props.replyToPost()}
+					className="flex flex-row uppercase rounded-md p-2 text-sm font-semibold items-center text-black md:text-xl lg:text-2xl bg-white dark:bg-black hover:animate-bounce dark:text-white gap-2"
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
