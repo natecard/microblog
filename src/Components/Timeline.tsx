@@ -101,28 +101,28 @@ export default function Timeline() {
 	// function deletePost(id: string) {}
 
 	return (
-		<div className="w-screen">
+		<div className="w-screen dark:text-white text-black">
 			<div className="px-3">
 				<div className="">
 					<form>
-						<div className="flex flex-col">
+						<div className="flex items-center flex-col">
 							<label className="" htmlFor="post">
 								Make post
 							</label>
 							<textarea
 								onChange={event => setPostText(event.target.value)}
-								className=""
+								className="w-1/2"
 								id="post"
 								value={postText}
 								autoComplete="off"
 							/>
-						</div>
 
-						<button onClick={e => savePost(e)} className="">
-							Send
-						</button>
+							<button onClick={e => savePost(e)} className="">
+								Send
+							</button>
+						</div>
 					</form>
-					<div id="post-card" className="md:px-24 pt-5">
+					<div id="post-card" className="md:px-24 text-2xl pt-5">
 						<h1>{`Hi, ${user.displayName} check out what is happening...`}</h1>
 						<div className="flex flex-col items-center md:px-32">
 							{postsArray.map(post => {
@@ -145,7 +145,6 @@ export default function Timeline() {
 					</div>
 				</div>
 			</div>
-			<SignOutUser />
 		</div>
 	);
 }

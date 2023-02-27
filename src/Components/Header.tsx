@@ -12,8 +12,10 @@ export default function Header(props: userInfo) {
 		<div
 			className="navbar 
 		md:w-full
-		w-max
+		w-fill
 		bg-base-100
+		dark:bg-black
+		dark:text-white
 		sticky
 		top-0 
 		drop-shadow-md"
@@ -35,7 +37,7 @@ export default function Header(props: userInfo) {
 						/>
 					</div>
 				</div>
-				<div className="dropdown dropdown-end">
+				<div className="dropdown dark:bg-black dark:text-white text-black dropdown-end">
 					<label tabIndex={0} className="btn btn-ghost btn-circle avatar">
 						<div className="w-10 rounded-full">
 							{user !== null || undefined ? (
@@ -49,7 +51,7 @@ export default function Header(props: userInfo) {
 					</label>
 					<ul
 						tabIndex={0}
-						className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52"
+						className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 dark:bg-black rounded-box w-52"
 					>
 						<li>
 							<p className="justify-between">
@@ -60,10 +62,8 @@ export default function Header(props: userInfo) {
 						<li>
 							<p>Settings</p>
 						</li>
-						<li onClick={() => supabase.auth.signOut()}>
-							<Link to="/">
-								<p>Logout</p>
-							</Link>
+						<li>
+							<SignOutUser />
 						</li>
 					</ul>
 				</div>

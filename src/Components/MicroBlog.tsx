@@ -6,14 +6,13 @@ export default function MicroBlog(props: post) {
 		<div
 			className="
       grid 
-      grid-cols-6 
-      grid-rows-6
+      grid-cols-3 
       max-h-96 
       lg:px-16  
-      w-[20rem] 
+      min-w-full
       md:w-[40rem] 
       lg:w-[50rem]
-      my-4
+      m-4
       rounded-md 
       border-solid 
       border 
@@ -23,17 +22,17 @@ export default function MicroBlog(props: post) {
 			dark:text-white"
 			id={props.uuid}
 		>
-			<div className="flex items-center justify-evenly col-start-2 md:col-start-1 col-span-3 row-start-1 row-span-3 flex-row">
+			<div className="flex pl-4 pt-2 items-center justify-start col-start-1 md:col-start-1 col-span-3 row-start-1 row-span-1 flex-row">
 				<img
-					className=" items-center rounded-full  h-10 md:h-12 lg:h-20"
+					className=" items-center rounded-full h-10 md:h-12 lg:h-20"
 					src={props.profilePic}
 				/>
-				<h2 className="col-span-4 col-start-3 font-semibold">{props.author}</h2>
+				<h2 className="col-span-2 pl-3 font-semibold">{props.author}</h2>
 			</div>
-			<p className="row-start-3 col-start-2 md:col-start-1 col-span-6 text-left flex self-end font-medium text-xl">
+			<p className="row-start-2 row-span-2 p-2 col-start-1 pl-3 col-span-3 text-left flex font-medium text-xl">
 				{props.content}
 			</p>
-			<div className="row-start-6 col-span-6 flex place-content-between items-end col-start-1">
+			<div className="row-start-4 col-span-3 flex place-content-between items-center col-start-1">
 				<button
 					onClick={() => props.likePost()}
 					className="btn border-0 text-black bg-white dark:bg-black dark:text-white gap-2"
