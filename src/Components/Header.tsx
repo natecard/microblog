@@ -10,30 +10,32 @@ export default function Header(props: userInfo) {
 
 	return (
 		<div
-			className="navbar 
-		md:w-full
-		w-fill
+			className="
+		navbar 
+		min-w-fit
 		bg-base-100
 		dark:bg-black
 		dark:text-white
 		sticky
-		top-0 
+		top-0
+		flex
+		justify-items-stretch
 		drop-shadow-md"
 		>
 			<div className="flex-1">
 				<Link to="/Timeline">
-					<p className="btn btn-ghost uppercase text-lg md:text-2xl lg:text-4xl">
+					<p className="btn btn-ghost uppercase text-xl md:text-3xl lg:text-5xl">
 						subforuma
 					</p>
 				</Link>
 			</div>
 			<div className="">
-				<div className="flex-none gap-2">
-					<div className="form-control">
+				<div className="flex-none md:block hidden gap-2">
+					<div className=" form-control">
 						<input
 							type="text"
 							placeholder="Search"
-							className="input mx-1 md:mx-9 lg:mx-14 input-bordered"
+							className="input md:mx-9 lg:mx-14  input-bordered"
 						/>
 					</div>
 				</div>

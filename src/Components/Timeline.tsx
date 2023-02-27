@@ -101,7 +101,7 @@ export default function Timeline() {
 	// function deletePost(id: string) {}
 
 	return (
-		<div className="w-screen dark:text-white text-black">
+		<div className="w-screen sm:w-fit dark:text-white text-black">
 			<div className="px-3">
 				<div className="">
 					<form>
