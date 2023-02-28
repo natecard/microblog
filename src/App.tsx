@@ -18,6 +18,7 @@ export default function App() {
 	const [sessionInfo, setSessionInfo] = useState<any>([]);
 	const [postsArray, setPostsArray] = useState<any[]>([]);
 	const [postText, setPostText] = useState('');
+	const [postLikes, setPostLikes] = useState(0);
 
 	const [user, setUser] = useState(
 		() =>
@@ -33,11 +34,6 @@ export default function App() {
 		sessionStorage.setItem('user', JSON.stringify(user));
 	}, [user]);
 
-	function likePost(id: any) {
-		// posts.map((post)=>{
-		//   post.filter(id) => post.id
-		// })
-	}
 	function boostPost(id: any) {
 		// posts.map((post)=>{
 		//   post.filter(id) => post.id
