@@ -11,7 +11,6 @@ export default function Timeline() {
 		user,
 		post,
 		setPostsArray,
-		likePost,
 		boostPost,
 		postsArray,
 		handlePostChange,
@@ -20,7 +19,6 @@ export default function Timeline() {
 	} = useContext(Context) as {
 		user: userInfo[];
 		post: post[];
-		likePost: Function;
 		boostPost: Function;
 		postsArray: any[];
 		setPostsArray: any;
@@ -54,6 +52,14 @@ export default function Timeline() {
 			setPostText('');
 		}
 	}
+	async function likePost(uuid: string, likes) {
+		// event.preventDefault();
+		const {data, error} = await supabase.rpc('increment', {
+			likes: likes + 1,
+		});
+		if (error) console.error(error);
+	}
+
 	useEffect(() => {
 		async function fetchPosts() {
 			const {data, error} = await supabase
@@ -66,39 +72,6 @@ export default function Timeline() {
 		}
 		fetchPosts();
 	}, []);
-	// const { data, error } = await supabase.from('posts').insert({
-	// profilePic: user.profilePic,
-	// content: postText,
-	// author: user.displayName,
-	// });
-	// const handleInserts = (payload: any) => {
-	//   console.log('Change received!', payload);
-	// };
-	// await supabase.from('posts').on('INSERT', handleInserts).subscribe();
-
-	// function displayPosts(
-	//   id: string,
-	//   timestamp: string,
-	//   displayName: any,
-	//   content: any,
-	//   profilePic: any,
-	//   imageUrl: any
-	// ) {
-	//   postsArray.map((post: post) => {
-	//     <MicroBlog
-	//       id={post.id}
-	//       author={post.author}
-	//       title={post.title}
-	//       profilePic={post.profilePic}
-	//       content={post.content}
-	//       likes={0}
-	//       timestamp={post.id}
-	//       likePost={likePost()}
-	//     />;
-	//   });
-	// }
-
-	// function deletePost(id: string) {}
 
 	return (
 		<div className="flex px-2 md:px-32 flex-col justify-center w-screen dark:text-white text-black">
@@ -127,9 +100,7 @@ export default function Timeline() {
 						return (
 							<MicroBlog
 								key={post.uuid}
-								likePost={function (): void {
-									throw new Error('Function not implemented.');
-								}}
+								likePost={() => likePost(post.uuid, post.likes)}
 								uuid={post.uuid}
 								author={post.author}
 								profilePic={post.profilePic}

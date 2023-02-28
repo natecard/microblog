@@ -1,7 +1,9 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {post} from './Interfaces';
+import {Context} from '../App';
 
 export default function MicroBlog(props: post) {
+	const likePost = useContext(Context);
 	return (
 		<div
 			className="grid	grid-cols-3	md:max-h-96	lg:px-16 md:min-w-fit md:max-w-full min-w-full my-4 md:mx-4	rounded-md border-solid border shadow-md dark:shadow-white/70 bg-white text-black dark:bg-black dark:text-white"
@@ -21,7 +23,7 @@ export default function MicroBlog(props: post) {
 			</p>
 			<div className="row-start-4 col-span-3 flex place-content-evenly pb-2 items-center col-start-1">
 				<button
-					onClick={() => props.likePost()}
+					onClick={() => props.likePost(props.id, event)}
 					className="flex flex-row uppercase rounded-md p-2 text-sm font-semibold items-center text-black md:text-xl lg:text-2xl bg-white hover:scale-110 dark:bg-black dark:text-white gap-2"
 				>
 					<svg
