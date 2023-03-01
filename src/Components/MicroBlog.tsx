@@ -1,12 +1,50 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {post} from './Interfaces';
 import {Context} from '../App';
+import {supabase} from '../supabaseClient';
 export default function MicroBlog(props: post) {
-	const {textAreaToggle, replyText, setReplyText} = useContext(Context) as {
+	const {replyText, setReplyText} = useContext(Context) as {
 		replyText: string;
-		setReplyText: any;
-		textAreaToggle: Function;
+		setReplyText: Function;
 	};
+	const [showTextArea, setShowTextArea] = useState(false);
+	const [alreadyClicked, setAlreadyClicked] = useState(
+		() => JSON.parse(sessionStorage.getItem(`${props.uuid}`)) || false
+	);
+	useEffect(() => {
+		sessionStorage.setItem(`${props.uuid}`, JSON.stringify(alreadyClicked));
+	}, [alreadyClicked]);
+
+	function likePostButton() {
+		likePost(props.uuid, event);
+		setAlreadyClicked((prevVal: boolean) => !prevVal);
+	}
+	async function likePost(uuid: string, event: any) {
+		event.preventDefault();
+		if (alreadyClicked == false) {
+			const {error} = await supabase.rpc('vote', {
+				quote_id: uuid,
+				increment_num: 1,
+			});
+			props.fetchPosts();
+			if (error) console.error(error);
+		} else {
+			const {error} = await supabase.rpc('vote', {
+				quote_id: uuid,
+				increment_num: -1,
+			});
+			props.fetchPosts();
+			if (error) console.error(error);
+		}
+	}
+	function textAreaToggle() {
+		// uuid: string, event: any
+		// find the closest div element with data-uuid attribute
+		// const element = event.currentTarget.closest('div');
+		// if (post.uuid === element.uuid)
+		// check if div exists and uuid matches
+		setShowTextArea((prevVal: boolean) => !prevVal);
+	}
 	return (
 		<div className="flex flex-col justify-center">
 			<div
@@ -30,31 +68,43 @@ export default function MicroBlog(props: post) {
 					className="row-start-4 col-span-3 flex place-content-evenly pb-2 items-center col-start-1"
 				>
 					<button
-						onClick={() => {
-							return props.likePost(props.uuid, event);
-						}}
+						onClick={() => likePostButton(props.uuid, event)}
 						className="flex flex-row uppercase rounded-md p-2 text-sm font-semibold items-center text-black md:text-xl lg:text-2xl bg-white hover:scale-110 dark:bg-black dark:text-white gap-2"
 					>
 						{' '}
 						{props.likes}
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							className="w-6 h-6 md:w-10 md:h-10 lg:w-14 lg:h-14"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth={1}
-								d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-							/>
-						</svg>
+						{alreadyClicked ? (
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								className="w-6 h-6 md:w-10 md:h-10 lg:w-14 lg:h-14 stroke-red-500 fill-red-500"
+								viewBox="0 0 24 24"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth={1}
+									d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+								/>
+							</svg>
+						) : (
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								className="w-6 h-6 md:w-10 md:h-10 lg:w-14 lg:h-14 fill-none stroke-current"
+								viewBox="0 0 24 24"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth={1}
+									d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+								/>
+							</svg>
+						)}
 						Like
 					</button>
+
 					<button
-						onClick={() => textAreaToggle(props.uuid)}
+						onClick={() => textAreaToggle()}
 						className="flex flex-row uppercase rounded-md p-2 text-sm font-semibold items-center text-black md:text-xl lg:text-2xl bg-white dark:bg-black hover:animate-pulse dark:text-white gap-2"
 					>
 						<svg
@@ -75,13 +125,13 @@ export default function MicroBlog(props: post) {
 					</button>
 				</div>
 			</div>
-			{props.showTextArea ? (
+			{showTextArea ? (
 				<div className="flex col-span-3 pb-3">
 					<h1>Reply:</h1>
 					<textarea
 						className=" md:w-1/2 w-5/6 m-1 rounded-md dark:bg-black dark:border-white border dark:text-white text-black"
 						value={replyText}
-						onChange={e => setReplyText(e.target.value)}
+						onChange={e => props.handleReplyChange(e.target.value)}
 					/>
 					<button
 						onClick={() => props.replyToPost()}

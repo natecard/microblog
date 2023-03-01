@@ -14,11 +14,10 @@ export default function Timeline() {
 		boostPost,
 		postsArray,
 		handlePostChange,
-		setPostText,
 		postText,
-		showTextarea,
-		setShowTextarea,
+		setPostText,
 		replyText,
+		setReplyText,
 	} = useContext(Context) as {
 		user: userInfo[];
 		post: post[];
@@ -28,10 +27,12 @@ export default function Timeline() {
 		postText: string;
 		setPostText: any;
 		handlePostChange: Function;
-		showTextarea: boolean;
-		setShowTextarea: any;
 		replyText: string;
+		setReplyText: any;
+		alreadyClicked: boolean;
+		setAlreadyClicked: any;
 	};
+
 	async function fetchPosts() {
 		const {data, error} = await supabase
 			.from('posts')
@@ -57,26 +58,7 @@ export default function Timeline() {
 		console.error(error);
 		setPostText('');
 	}
-	// function textAreaToggle(
-	// 	uuid: string,
-	// 	event: React.ChangeEvent<HTMLButtonElement>,
-	// 	error: any
-	// ) {
-	// 	console.log(uuid);
-	// 	if (uuid === event.target.uuid)
-	// 		setShowTextarea((prevVal: boolean) => !prevVal);
-	// 	if (error) console.error(error);
-	// }
 
-	async function likePost(uuid: string, event: any) {
-		event.preventDefault();
-		const {error} = await supabase.rpc('vote', {
-			quote_id: uuid,
-			increment_num: 1,
-		});
-		fetchPosts();
-		if (error) console.error(error);
-	}
 	async function replyToPost(event: any) {
 		event.preventDefault();
 		const {data, error} = await supabase.from('replies').insert([
@@ -89,7 +71,15 @@ export default function Timeline() {
 			},
 		]);
 	}
-
+	handleReplyChange(event) {
+    const { name, value } = event.target;
+    setEducationData((prevData) => {
+      const newData = value;
+      };
+      return newData;
+    });
+  }
+	}
 	useEffect(() => {
 		fetchPosts();
 	}, []);
@@ -126,16 +116,16 @@ export default function Timeline() {
 						return (
 							<MicroBlog
 								key={post.uuid}
-								likePost={() => likePost(post.uuid, event)}
 								replyToPost={() => replyToPost(post.uuid, event)}
+								fetchPosts={() => fetchPosts()}
 								uuid={post.uuid}
 								author={post.author}
 								profilePic={post.profilePic}
 								content={post.content}
 								likes={post.likes}
-								showTextArea={showTextarea}
 								timestamp={post.timestamp}
 								replyText={replyText}
+								handleReplyChange={() => handleReplyChange(e.target.value)}
 							/>
 						);
 					})}
