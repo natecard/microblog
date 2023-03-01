@@ -1,4 +1,5 @@
 export interface post {
+	fetchPosts(): void;
 	likePost(): void;
 	textAreaToggle(): void;
 	replyToPost(): void;
@@ -8,7 +9,6 @@ export interface post {
 	content: string;
 	likes: number;
 	timestamp: string;
-	showTextArea: boolean;
 	replyText: string;
 	// boostPost: Function;
 }

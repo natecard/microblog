@@ -1,11 +1,11 @@
 import React, {useContext, useEffect} from 'react';
-import {AuthUi, authTheme, supabase} from '../supabaseClient';
+import {AuthUi, supabase} from '../supabaseClient';
 import SignOutUser from './SignOutUser';
 import {Context} from '../App';
 import {useNavigate} from 'react-router-dom';
 
 export default function SignIn() {
-	const {user, sessionInfo, setUser, setSessionInfo} = useContext(Context);
+	const {user, setUser} = useContext(Context);
 	let navigate = useNavigate();
 	supabase.auth.onAuthStateChange((event, session) => {
 		if (event == 'SIGNED_IN') {
@@ -35,7 +35,6 @@ export default function SignIn() {
 				});
 			} catch (error) {
 				console.error(error);
-				console.log('No user logged in');
 			}
 		}
 		fetchUserData();
@@ -47,7 +46,6 @@ export default function SignIn() {
 				<div>
 					<AuthUi
 						supabaseClient={supabase}
-						appearance={authTheme}
 						providers={['google']}
 						magicLink={true}
 					/>

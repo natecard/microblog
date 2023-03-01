@@ -13,13 +13,9 @@ export const Context = createContext<any>([]);
 
 export default function App() {
 	const [post, setPost] = useState<post[]>([]);
-	const [content, setContent] = useState('');
-	const [sessionInfo, setSessionInfo] = useState<any>([]);
 	const [postsArray, setPostsArray] = useState<any[]>([]);
 	const [postText, setPostText] = useState('');
-	const [showTextArea, setShowTextArea] = useState(false);
 	const [replyText, setReplyText] = useState('');
-
 	const [user, setUser] = useState(
 		() =>
 			JSON.parse(sessionStorage.getItem('user')) || [
@@ -34,15 +30,6 @@ export default function App() {
 		sessionStorage.setItem('user', JSON.stringify(user));
 	}, [user]);
 
-	function textAreaToggle(uuid: string) {
-		// uuid: string, event: any
-		// find the closest div element with data-uuid attribute
-		// const element = event.currentTarget.closest('div');
-		// if (post.uuid === element.uuid)
-		// check if div exists and uuid matches
-		console.log(uuid);
-		setShowTextArea((prevVal: boolean) => !prevVal);
-	}
 	return (
 		<Context.Provider
 			value={{
@@ -54,11 +41,8 @@ export default function App() {
 				setPost,
 				postText,
 				setPostText,
-				sessionInfo,
-				setSessionInfo,
-				textAreaToggle,
-				showTextArea,
-				setShowTextArea,
+				replyText,
+				setReplyText,
 			}}
 		>
 			<Header displayName={''} uuid={''} profilePic={''} email={''} />
