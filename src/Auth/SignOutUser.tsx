@@ -12,7 +12,6 @@ export default function SignOutUser() {
 			console.log('sessionStorage cleared');
 			localStorage.removeItem('user');
 			const {error} = await supabase.auth.signOut();
-			setUser(null);
 		} else {
 			console.log('No one is signed in!');
 		}
@@ -23,7 +22,7 @@ export default function SignOutUser() {
 			type="button"
 			className="btn dark:bg-black dark:text-white text-black bg-white normal-case"
 		>
-			<Link to="/home"> Log Out</Link>
+			<Link to="/">Log Out</Link>
 		</button>
 	);
 }

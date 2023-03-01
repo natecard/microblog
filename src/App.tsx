@@ -7,6 +7,7 @@ import Header from './Components/Header';
 import SignOutButton from './Auth/SignOutUser';
 import Timeline from './Components/Timeline';
 import Landing from './Auth/SignIn';
+import Footer from './Components/Footer';
 
 export const Context = createContext<any>([]);
 
@@ -62,9 +63,11 @@ export default function App() {
 		>
 			<Header displayName={''} uuid={''} profilePic={''} email={''} />
 			<Routes>
+				<Route path="/" element={<SignIn />}></Route>
 				<Route path="/home" element={<SignIn />}></Route>
 				<Route path="/timeline" element={<Timeline />}></Route>
 			</Routes>
+			<Footer />
 		</Context.Provider>
 	);
 }
