@@ -1,4 +1,4 @@
-import React, {ReactEventHandler, useContext, useEffect} from 'react';
+import React, {ReactEventHandler, useContext, useEffect, useState} from 'react';
 import {post, userInfo} from './Interfaces';
 import {Context} from '../App';
 import MicroBlog from './MicroBlog';
@@ -16,6 +16,9 @@ export default function Timeline() {
 		handlePostChange,
 		setPostText,
 		postText,
+		showTextarea,
+		setShowTextarea,
+		replyText,
 	} = useContext(Context) as {
 		user: userInfo[];
 		post: post[];
@@ -25,17 +28,11 @@ export default function Timeline() {
 		postText: string;
 		setPostText: any;
 		handlePostChange: Function;
+		showTextarea: boolean;
+		setShowTextarea: any;
+		replyText: string;
 	};
-	// async function loadPost(string: string) {
-	//   try {
-	//     const { data, error } = await supabase
-	//       .from('posts')
-	//       .select('timestamp, author, profilePic, content, likes, id');
-	//     console.log('loading...');
-	//   } catch (error) {
-	//     console.error('Error writing new post to Supabase Database', error);
-	//   }
-	// }
+
 	async function savePost(event: any) {
 		event.preventDefault();
 		const {data, error} = await supabase.from('posts').insert([
@@ -52,14 +49,37 @@ export default function Timeline() {
 			setPostText('');
 		}
 	}
-	async function likePost(uuid: string, likes) {
-		// event.preventDefault();
-		const {data, error} = await supabase.rpc('increment', {
-			likes: likes + 1,
+	// function textAreaToggle(
+	// 	uuid: string,
+	// 	event: React.ChangeEvent<HTMLButtonElement>,
+	// 	error: any
+	// ) {
+	// 	console.log(uuid);
+	// 	if (uuid === event.target.uuid)
+	// 		setShowTextarea((prevVal: boolean) => !prevVal);
+	// 	if (error) console.error(error);
+	// }
+
+	async function likePost(uuid: string, event: any) {
+		event.preventDefault();
+		const {data, error} = await supabase.rpc('vote', {
+			quote_id: uuid,
+			increment_num: 1,
 		});
 		if (error) console.error(error);
 	}
-
+	async function replyToPost(event: any) {
+		event.preventDefault();
+		const {data, error} = await supabase.from('replies').insert([
+			{
+				content: replyText,
+				uuid: nanoid(),
+				author: user.displayName,
+				likes: 0,
+				profilePic: user.profilePic,
+			},
+		]);
+	}
 	useEffect(() => {
 		async function fetchPosts() {
 			const {data, error} = await supabase
@@ -71,7 +91,7 @@ export default function Timeline() {
 			}
 		}
 		fetchPosts();
-	}, []);
+	}, [MicroBlog]);
 
 	return (
 		<div className="flex px-2 md:px-32 flex-col justify-center w-screen dark:text-white text-black">
@@ -87,7 +107,6 @@ export default function Timeline() {
 						value={postText}
 						autoComplete="off"
 					/>
-
 					<button onClick={e => savePost(e)} className="">
 						Send
 					</button>
@@ -100,13 +119,16 @@ export default function Timeline() {
 						return (
 							<MicroBlog
 								key={post.uuid}
-								likePost={() => likePost(post.uuid, post.likes)}
+								likePost={() => likePost(post.uuid, event)}
+								replyToPost={() => replyToPost(post.uuid, event)}
 								uuid={post.uuid}
 								author={post.author}
 								profilePic={post.profilePic}
 								content={post.content}
-								likes={0}
+								likes={post.likes}
+								showTextArea={showTextarea}
 								timestamp={post.timestamp}
+								replyText={replyText}
 							/>
 						);
 					})}
