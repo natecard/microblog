@@ -32,6 +32,15 @@ export default function Timeline() {
 		setShowTextarea: any;
 		replyText: string;
 	};
+	async function fetchPosts() {
+		const {data, error} = await supabase
+			.from('posts')
+			.select('*')
+			.order('timestamp', {ascending: false});
+		if (data) {
+			setPostsArray(data);
+		}
+	}
 
 	async function savePost(event: any) {
 		event.preventDefault();
@@ -44,10 +53,9 @@ export default function Timeline() {
 				profilePic: user.profilePic,
 			},
 		]);
+		fetchPosts();
 		console.error(error);
-		if (data) {
-			setPostText('');
-		}
+		setPostText('');
 	}
 	// function textAreaToggle(
 	// 	uuid: string,
@@ -62,10 +70,11 @@ export default function Timeline() {
 
 	async function likePost(uuid: string, event: any) {
 		event.preventDefault();
-		const {data, error} = await supabase.rpc('vote', {
+		const {error} = await supabase.rpc('vote', {
 			quote_id: uuid,
 			increment_num: 1,
 		});
+		fetchPosts();
 		if (error) console.error(error);
 	}
 	async function replyToPost(event: any) {
@@ -80,18 +89,10 @@ export default function Timeline() {
 			},
 		]);
 	}
+
 	useEffect(() => {
-		async function fetchPosts() {
-			const {data, error} = await supabase
-				.from('posts')
-				.select('*')
-				.order('timestamp', {ascending: false});
-			if (data) {
-				setPostsArray(data);
-			}
-		}
 		fetchPosts();
-	}, [MicroBlog]);
+	}, []);
 
 	return (
 		<div className="flex px-2 md:px-32 flex-col justify-center w-screen dark:text-white text-black">
@@ -107,7 +108,7 @@ export default function Timeline() {
 								className="md:w-1/2 w-5/6 dark:bg-black dark:border-white border dark:text-white text-black"
 								id="post"
 								value={postText}
-								autoComplete="off"
+								autoComplete="on"
 							/>
 							<button onClick={e => savePost(e)} className="">
 								Send
