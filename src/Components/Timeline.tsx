@@ -59,27 +59,6 @@ export default function Timeline() {
 		setPostText('');
 	}
 
-	async function replyToPost(event: any) {
-		event.preventDefault();
-		const {data, error} = await supabase.from('replies').insert([
-			{
-				content: replyText,
-				uuid: nanoid(),
-				author: user.displayName,
-				likes: 0,
-				profilePic: user.profilePic,
-			},
-		]);
-	}
-	handleReplyChange(event) {
-    const { name, value } = event.target;
-    setEducationData((prevData) => {
-      const newData = value;
-      };
-      return newData;
-    });
-  }
-	}
 	useEffect(() => {
 		fetchPosts();
 	}, []);
@@ -116,7 +95,7 @@ export default function Timeline() {
 						return (
 							<MicroBlog
 								key={post.uuid}
-								replyToPost={() => replyToPost(post.uuid, event)}
+								replyToPost={() => replyToPost(event)}
 								fetchPosts={() => fetchPosts()}
 								uuid={post.uuid}
 								author={post.author}

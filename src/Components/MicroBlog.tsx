@@ -1,11 +1,14 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {post} from './Interfaces';
+import {post, userInfo} from './Interfaces';
 import {Context} from '../App';
 import {supabase} from '../supabaseClient';
+import {nanoid} from 'nanoid';
+
 export default function MicroBlog(props: post) {
-	const {replyText, setReplyText} = useContext(Context) as {
+	const {replyText, setReplyText, user} = useContext(Context) as {
 		replyText: string;
 		setReplyText: Function;
+		user: userInfo[];
 	};
 	const [showTextArea, setShowTextArea] = useState(false);
 	const [alreadyClicked, setAlreadyClicked] = useState(
@@ -18,6 +21,23 @@ export default function MicroBlog(props: post) {
 	function likePostButton() {
 		likePost(props.uuid, event);
 		setAlreadyClicked((prevVal: boolean) => !prevVal);
+	}
+	async function replyToPost(event: any) {
+		event.preventDefault();
+		const {data, error} = await supabase.from('replies').insert([
+			{
+				reply: props.uuid,
+				content: replyText,
+				uuid: nanoid(),
+				author: user.displayName,
+				likes: 0,
+				profilePic: user.profilePic,
+			},
+		]);
+		setReplyText('');
+		textAreaToggle();
+		props.fetchPosts();
+		console.error(error);
 	}
 	async function likePost(uuid: string, event: any) {
 		event.preventDefault();
@@ -38,11 +58,6 @@ export default function MicroBlog(props: post) {
 		}
 	}
 	function textAreaToggle() {
-		// uuid: string, event: any
-		// find the closest div element with data-uuid attribute
-		// const element = event.currentTarget.closest('div');
-		// if (post.uuid === element.uuid)
-		// check if div exists and uuid matches
 		setShowTextArea((prevVal: boolean) => !prevVal);
 	}
 	return (
@@ -131,10 +146,10 @@ export default function MicroBlog(props: post) {
 					<textarea
 						className=" md:w-1/2 w-5/6 m-1 rounded-md dark:bg-black dark:border-white border dark:text-white text-black"
 						value={replyText}
-						onChange={e => props.handleReplyChange(e.target.value)}
+						onChange={event => setReplyText(event.target.value)}
 					/>
 					<button
-						onClick={() => props.replyToPost()}
+						onClick={() => replyToPost(event)}
 						className="flex flex-row uppercase rounded-md p-2 text-sm font-semibold items-center text-black md:text-xl lg:text-2xl bg-white dark:bg-black hover:animate-pulse dark:text-white gap-2"
 					>
 						Submit
