@@ -5,6 +5,7 @@ import MicroBlog from './MicroBlog';
 import {supabase} from '../supabaseClient';
 import SignOutUser from '../Auth/SignOutUser';
 import {nanoid} from 'nanoid';
+import Reply from './Reply';
 
 export default function Timeline() {
 	const {
@@ -33,15 +34,15 @@ export default function Timeline() {
 		setAlreadyClicked: any;
 	};
 
-	async function fetchPosts() {
-		const {data, error} = await supabase
-			.from('posts')
-			.select('*')
-			.order('timestamp', {ascending: false});
-		if (data) {
-			setPostsArray(data);
-		}
-	}
+	// async function fetchPosts() {
+	// 	const {data, error} = await supabase
+	// 		.from('posts')
+	// 		.select('*')
+	// 		.order('timestamp', {ascending: false});
+	// 	if (data) {
+	// 		setPostsArray(data);
+	// 	}
+	// }
 
 	async function savePost(event: any) {
 		event.preventDefault();
@@ -58,9 +59,26 @@ export default function Timeline() {
 		console.error(error);
 		setPostText('');
 	}
+	//   useEffect(() => {
+
+	async function postsWithReplies() {
+		const {data: posts, error} = await supabase
+			.from('posts')
+			.select('*, replies (*)'); // select all columns from posts and all columns from replies
+
+		if (error) {
+			console.error(error);
+		} else {
+			setPostsArray(posts); // set data state variable to posts array
+		}
+		// postsWithReplies();
+	}
+
+	// }, []);
 
 	useEffect(() => {
-		fetchPosts();
+		// fetchPosts();
+		postsWithReplies();
 	}, []);
 
 	return (
@@ -91,7 +109,40 @@ export default function Timeline() {
 			)}
 			<div id="post-card" className="flex-col flex items-center text-2xl pt-5">
 				<div className="flex flex-col lg:w-[50rem] ">
-					{postsArray.map(post => {
+					{postsArray.map(post => (
+						<MicroBlog
+							key={post.uuid}
+							// replyToPost={() => replyToPost(event)}
+							// fetchPosts={() => fetchPosts()}
+							uuid={post.uuid}
+							author={post.author}
+							profilePic={post.profilePic}
+							content={post.content}
+							likes={post.likes}
+							timestamp={post.timestamp}
+							replyText={replyText}
+							// handleReplyChange={() => handleReplyChange(e.target.value)}
+
+							// <div className="replies">
+							{...Array.from(post.replies).map(reply => (
+								<Reply
+									key={reply.uuid}
+									replyToPost={() => replyToPost(event)}
+									fetchPosts={() => fetchPosts()}
+									uuid={reply.uuid}
+									author={reply.author}
+									profilePic={reply.profilePic}
+									content={reply.content}
+									likes={reply.likes}
+									timestamp={reply.timestamp}
+									replyText={replyText}
+									handleReplyChange={() => handleReplyChange(e.target.value)}
+								/>
+							))}
+						/>
+					))}
+					{/* {/* </div> */}
+					{/* {postsArray.map(post => {
 						return (
 							<MicroBlog
 								key={post.uuid}
@@ -107,7 +158,7 @@ export default function Timeline() {
 								handleReplyChange={() => handleReplyChange(e.target.value)}
 							/>
 						);
-					})}
+					})} */}
 				</div>
 			</div>
 		</div>
