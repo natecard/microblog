@@ -17,6 +17,8 @@ export default function Timeline() {
 		handlePostChange,
 		postText,
 		setPostText,
+		replies,
+		setReplies,
 		replyText,
 		setReplyText,
 	} = useContext(Context) as {
@@ -30,20 +32,32 @@ export default function Timeline() {
 		handlePostChange: Function;
 		replyText: string;
 		setReplyText: any;
+		replies: post[];
+		setReplies: any;
 		alreadyClicked: boolean;
 		setAlreadyClicked: any;
 	};
 
-	// async function fetchPosts() {
-	// 	const {data, error} = await supabase
-	// 		.from('posts')
-	// 		.select('*')
-	// 		.order('timestamp', {ascending: false});
-	// 	if (data) {
-	// 		setPostsArray(data);
-	// 	}
-	// }
+	async function fetchPosts() {
+		const {data, error} = await supabase
+			.from('posts')
+			.select('*')
+			.order('timestamp', {ascending: false});
+		if (data) {
+			setPostsArray(data);
+		}
+	}
 
+	async function fetchReplies() {
+		const {data, error} = await supabase.rpc('group_replies', {});
+		if (error) {
+			console.error(error);
+		} else {
+			setReplies(data); // set data state variable to posts array
+		}
+	}
+
+	// }, []);
 	async function savePost(event: any) {
 		event.preventDefault();
 		const {data, error} = await supabase.from('posts').insert([
@@ -59,26 +73,9 @@ export default function Timeline() {
 		console.error(error);
 		setPostText('');
 	}
-	//   useEffect(() => {
-
-	async function postsWithReplies() {
-		const {data: posts, error} = await supabase
-			.from('posts')
-			.select('*, replies (*)'); // select all columns from posts and all columns from replies
-
-		if (error) {
-			console.error(error);
-		} else {
-			setPostsArray(posts); // set data state variable to posts array
-		}
-		// postsWithReplies();
-	}
-
-	// }, []);
-
 	useEffect(() => {
-		// fetchPosts();
-		postsWithReplies();
+		fetchPosts();
+		fetchReplies();
 	}, []);
 
 	return (
@@ -112,8 +109,8 @@ export default function Timeline() {
 					{postsArray.map(post => (
 						<MicroBlog
 							key={post.uuid}
-							// replyToPost={() => replyToPost(event)}
-							// fetchPosts={() => fetchPosts()}
+							replyToPost={() => replyToPost(event)}
+							fetchPosts={() => fetchPosts()}
 							uuid={post.uuid}
 							author={post.author}
 							profilePic={post.profilePic}
@@ -121,10 +118,12 @@ export default function Timeline() {
 							likes={post.likes}
 							timestamp={post.timestamp}
 							replyText={replyText}
-							// handleReplyChange={() => handleReplyChange(e.target.value)}
-
-							// <div className="replies">
-							{...Array.from(post.replies).map(reply => (
+							handleReplyChange={() => handleReplyChange(e.target.value)}
+						/>
+					))}{' '}
+					{replies.length < 1 ? (
+						<div className="replies">
+							{replies.map(reply => (
 								<Reply
 									key={reply.uuid}
 									replyToPost={() => replyToPost(event)}
@@ -136,11 +135,18 @@ export default function Timeline() {
 									likes={reply.likes}
 									timestamp={reply.timestamp}
 									replyText={replyText}
-									handleReplyChange={() => handleReplyChange(e.target.value)}
+									likePost={function (): void {
+										throw new Error('Function not implemented.');
+									}}
+									textAreaToggle={function (): void {
+										throw new Error('Function not implemented.');
+									}}
 								/>
 							))}
-						/>
-					))}
+						</div>
+					) : (
+						<></>
+					)}
 					{/* {/* </div> */}
 					{/* {postsArray.map(post => {
 						return (

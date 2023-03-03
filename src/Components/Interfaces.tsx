@@ -1,8 +1,5 @@
 export interface post {
 	fetchPosts(): void;
-	likePost(): void;
-	textAreaToggle(): void;
-	replyToPost(): void;
 	uuid: string;
 	author: string;
 	profilePic: string;
@@ -10,7 +7,6 @@ export interface post {
 	likes: number;
 	timestamp: string;
 	replyText: string;
-	// boostPost: Function;
 }
 export interface userInfo {
 	displayName: string;

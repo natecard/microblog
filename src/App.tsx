@@ -13,6 +13,7 @@ export const Context = createContext<any>([]);
 
 export default function App() {
 	const [post, setPost] = useState<post[]>([]);
+	const [replies, setReplies] = useState<post[]>([]);
 	const [postsArray, setPostsArray] = useState<any[]>([]);
 	const [postText, setPostText] = useState('');
 	const [replyText, setReplyText] = useState('');
@@ -41,6 +42,8 @@ export default function App() {
 				setPost,
 				postText,
 				setPostText,
+				replies,
+				setReplies,
 				replyText,
 				setReplyText,
 			}}
