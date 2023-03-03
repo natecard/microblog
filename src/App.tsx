@@ -15,6 +15,7 @@ export default function App() {
 	const [post, setPost] = useState<post[]>([]);
 	const [replies, setReplies] = useState<post[]>([]);
 	const [postsArray, setPostsArray] = useState<any[]>([]);
+	const [repliesArray, setRepliesArray] = useState<any[]>([]);
 	const [postText, setPostText] = useState('');
 	const [replyText, setReplyText] = useState('');
 	const [user, setUser] = useState(
@@ -38,6 +39,8 @@ export default function App() {
 				setUser,
 				postsArray,
 				setPostsArray,
+				repliesArray,
+				setRepliesArray,
 				post,
 				setPost,
 				postText,

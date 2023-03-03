@@ -1,5 +1,5 @@
 import React, {ReactEventHandler, useContext, useEffect, useState} from 'react';
-import {post, userInfo} from './Interfaces';
+import {post, replies, userInfo} from './Interfaces';
 import {Context} from '../App';
 import MicroBlog from './MicroBlog';
 import {supabase} from '../supabaseClient';
@@ -12,13 +12,13 @@ export default function Timeline() {
 		user,
 		post,
 		setPostsArray,
-		boostPost,
 		postsArray,
-		handlePostChange,
 		postText,
 		setPostText,
 		replies,
 		setReplies,
+		repliesArray,
+		setRepliesArray,
 		replyText,
 		setReplyText,
 	} = useContext(Context) as {
@@ -32,8 +32,10 @@ export default function Timeline() {
 		handlePostChange: Function;
 		replyText: string;
 		setReplyText: any;
-		replies: post[];
+		replies: replies[];
 		setReplies: any;
+		repliesArray: any[];
+		setRepliesArray: any;
 		alreadyClicked: boolean;
 		setAlreadyClicked: any;
 	};
@@ -47,16 +49,35 @@ export default function Timeline() {
 			setPostsArray(data);
 		}
 	}
-
+	//TODO finish reply mapping
 	async function fetchReplies() {
 		const {data, error} = await supabase.rpc('group_replies', {});
 		if (error) {
 			console.error(error);
 		} else {
-			setReplies(data); // set data state variable to posts array
+			console.log(data);
+			setRepliesArray(
+				data.map((replyItem: replies) => ({
+					content_array: replies,
+				}))
+			);
 		}
 	}
 
+	// setReplies(
+	// repliesArray.map((item, i) => {
+	// const replyItems = item.repliesArray[i].content_array[i];
+	// return {
+	// author: replyItems.author,
+	// content: replyItems.content,
+	// likes: replyItems.likes,
+	// profilePic: replyItems.profilePic,
+	// timestamp: replyItems.timestamp,
+	// updated_at: replyItems.updated_at,
+	// uuid: replyItems.uuid,
+	// };
+	// });
+	// )
 	// }, []);
 	async function savePost(event: any) {
 		event.preventDefault();

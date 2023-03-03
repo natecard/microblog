@@ -13,3 +13,12 @@ export interface userInfo {
 	profilePic: string;
 	email: string;
 }
+export interface replies {
+	uuid: string;
+	author: string;
+	profilePic: string;
+	content: string;
+	likes: number;
+	timestamp: string;
+	replied_to: string;
+}
