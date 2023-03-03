@@ -20,5 +20,5 @@ export interface replies {
 	content: string;
 	likes: number;
 	timestamp: string;
-	replied_to: string;
+	repliedTo: string;
 }

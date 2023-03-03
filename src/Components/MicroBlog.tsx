@@ -1,14 +1,27 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {post, userInfo} from './Interfaces';
+import {post, replies, userInfo} from './Interfaces';
 import {Context} from '../App';
 import {supabase} from '../supabaseClient';
 import {nanoid} from 'nanoid';
+import Reply from './Reply';
 
 export default function MicroBlog(props: post) {
-	const {replyText, setReplyText, user} = useContext(Context) as {
+	const {
+		replyText,
+		setReplyText,
+		user,
+		repliesArray,
+		postsArray,
+		setReplies,
+		replies,
+	} = useContext(Context) as {
 		replyText: string;
 		setReplyText: Function;
 		user: userInfo[];
+		postsArray: post[];
+		repliesArray: replies[];
+		replies: replies[];
+		setReplies: any;
 	};
 	const [showTextArea, setShowTextArea] = useState(false);
 	const [alreadyClicked, setAlreadyClicked] = useState(
@@ -17,7 +30,23 @@ export default function MicroBlog(props: post) {
 	useEffect(() => {
 		sessionStorage.setItem(`${props.uuid}`, JSON.stringify(alreadyClicked));
 	}, [alreadyClicked]);
-
+	//TODO Finish render useEffect for the replies
+	useEffect(() => {
+		setReplies(
+			postsArray
+				.filter(post =>
+					repliesArray.filter(reply => reply.repliedTo == post.uuid)
+				)
+				.map(post => ({
+					post,
+					replies: repliesArray.filter(
+						reply => reply.repliedTo == post.uuid
+						//spread matching reply repliedTo into the reply
+					),
+				}))
+		);
+	}, []);
+	// console.log(replies);
 	function likePostButton() {
 		likePost(props.uuid, event);
 		setAlreadyClicked((prevVal: boolean) => !prevVal);
@@ -154,6 +183,27 @@ export default function MicroBlog(props: post) {
 					>
 						Submit
 					</button>
+				</div>
+			) : (
+				<></>
+			)}
+			{repliesArray.length > 1 ? (
+				<div className="replies">
+					{replies.map(reply => (
+						<Reply
+							key={reply.uuid}
+							replyToPost={() => replyToPost(event)}
+							fetchPosts={() => fetchPosts()}
+							uuid={reply.uuid}
+							author={reply.author}
+							profilePic={reply.profilePic}
+							content={reply.content}
+							likes={reply.likes}
+							timestamp={reply.timestamp}
+							repliedTo={reply.repliedTo}
+							replyText={replyText}
+						/>
+					))}
 				</div>
 			) : (
 				<></>

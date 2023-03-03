@@ -49,7 +49,6 @@ export default function Timeline() {
 			setPostsArray(data);
 		}
 	}
-	//TODO finish reply mapping
 	async function fetchReplies() {
 		const {data, error} = await supabase.rpc('group_replies', {});
 		if (error) {
@@ -67,7 +66,7 @@ export default function Timeline() {
 						content: item.content,
 						likes: item.likes,
 						timestamp: item.timestamp,
-						replied_to: reply.replied_to,
+						repliedTo: reply.replied_to,
 					}))
 				)
 			);
@@ -149,35 +148,10 @@ export default function Timeline() {
 							likes={post.likes}
 							timestamp={post.timestamp}
 							replyText={replyText}
+							replies={replies}
 							handleReplyChange={() => handleReplyChange(e.target.value)}
 						/>
 					))}{' '}
-					{replies.length < 1 ? (
-						<div className="replies">
-							{replies.map(reply => (
-								<Reply
-									key={reply.uuid}
-									replyToPost={() => replyToPost(event)}
-									fetchPosts={() => fetchPosts()}
-									uuid={reply.uuid}
-									author={reply.author}
-									profilePic={reply.profilePic}
-									content={reply.content}
-									likes={reply.likes}
-									timestamp={reply.timestamp}
-									replyText={replyText}
-									likePost={function (): void {
-										throw new Error('Function not implemented.');
-									}}
-									textAreaToggle={function (): void {
-										throw new Error('Function not implemented.');
-									}}
-								/>
-							))}
-						</div>
-					) : (
-						<></>
-					)}
 					{/* {/* </div> */}
 					{/* {postsArray.map(post => {
 						return (
