@@ -55,11 +55,21 @@ export default function Timeline() {
 		if (error) {
 			console.error(error);
 		} else {
-			console.log(data);
+			// const {
+			// data: {content_array},
+			// } = data;
 			setRepliesArray(
-				data.map((replyItem: replies) => ({
-					content_array: replies,
-				}))
+				data.flatMap((reply: any) =>
+					reply.content_array.flatMap((item: replies) => ({
+						author: item.author,
+						uuid: item.uuid,
+						profilePic: item.profilePic,
+						content: item.content,
+						likes: item.likes,
+						timestamp: item.timestamp,
+						replied_to: reply.replied_to,
+					}))
+				)
 			);
 		}
 	}

@@ -26,7 +26,7 @@ export default function MicroBlog(props: post) {
 		event.preventDefault();
 		const {data, error} = await supabase.from('replies').insert([
 			{
-				reply: props.uuid,
+				replied_to: props.uuid,
 				content: replyText,
 				uuid: nanoid(),
 				author: user.displayName,
