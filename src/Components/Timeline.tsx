@@ -22,7 +22,7 @@ export default function Timeline() {
 		replyText,
 		setReplyText,
 	} = useContext(Context) as {
-		user: userInfo[];
+		user: userInfo;
 		post: post[];
 		boostPost: Function;
 		postsArray: any[];
@@ -40,7 +40,7 @@ export default function Timeline() {
 		setAlreadyClicked: any;
 	};
 
-	async function fetchPosts() {
+	async function initalFetchPosts() {
 		const {data, error} = await supabase
 			.from('posts')
 			.select('*')
@@ -49,14 +49,23 @@ export default function Timeline() {
 			setPostsArray(data);
 		}
 	}
+
+	async function fetchPosts() {
+		const posts = supabase
+			.channel('custom-all-channel')
+			.on(
+				'postgres_changes',
+				{event: '*', schema: 'public', table: 'posts'},
+				payload => {
+					console.log('Change received!', payload);
+				}
+			)
+			.subscribe();
+	}
+
 	async function fetchReplies() {
 		const {data, error} = await supabase.rpc('group_replies', {});
-		if (error) {
-			console.error(error);
-		} else {
-			// const {
-			// data: {content_array},
-			// } = data;
+		if (data) {
 			setRepliesArray(
 				data.flatMap((reply: any) =>
 					reply.content_array.flatMap((item: replies) => ({
@@ -70,6 +79,9 @@ export default function Timeline() {
 					}))
 				)
 			);
+		} else {
+			error;
+			console.error(error);
 		}
 	}
 	useEffect(() => {
@@ -90,7 +102,6 @@ export default function Timeline() {
 				}))
 		);
 	}, [postsArray]);
-	console.log(replies);
 
 	async function savePost(event: any) {
 		event.preventDefault();
@@ -108,7 +119,7 @@ export default function Timeline() {
 		setPostText('');
 	}
 	useEffect(() => {
-		fetchPosts();
+		initalFetchPosts();
 		fetchReplies();
 	}, []);
 
@@ -140,41 +151,45 @@ export default function Timeline() {
 			)}
 			<div id="post-card" className="flex-col flex items-center text-2xl pt-5">
 				<div className="flex flex-col lg:w-[50rem] ">
-					{replies.map(({post, replies}) => (
-						<div key={post.uuid}>
-							<MicroBlog
-								post={post}
-								key={post.uuid}
-								replyToPost={() => replyToPost(event)}
-								fetchPosts={() => fetchPosts()}
-								uuid={post.uuid}
-								author={post.author}
-								profilePic={post.profilePic}
-								content={post.content}
-								likes={post.likes}
-								timestamp={post.timestamp}
-								replyText={replyText}
-								replies={replies}
-								handleReplyChange={() => handleReplyChange(e.target.value)}
-							/>
-							{replies.map(reply => (
-								<Reply
-									reply={reply}
-									key={reply.uuid}
-									replyToPost={() => replyToPost(event)}
+					{replies.map(
+						({post, replies}): JSX.Element => (
+							<div key={post.uuid}>
+								<MicroBlog
+									post={post}
+									key={post.uuid}
 									fetchPosts={() => fetchPosts()}
-									uuid={reply.uuid}
-									author={reply.author}
-									profilePic={reply.profilePic}
-									content={reply.content}
-									likes={reply.likes}
-									timestamp={reply.timestamp}
+									fetchReplies={() => fetchReplies()}
+									uuid={post.uuid}
+									author={post.author}
+									profilePic={post.profilePic}
+									content={post.content}
+									likes={post.likes}
+									timestamp={post.timestamp}
 									replyText={replyText}
-									handleReplyChange={() => handleReplyChange(e.target.value)}
+									// handleReplyChange={() => handleReplyChange(e.target.value)}
 								/>
-							))}
-						</div>
-					))}{' '}
+								{replies.map((reply: replies) => (
+									<Reply
+										reply={reply}
+										key={reply.uuid}
+										fetchPosts={() => fetchPosts()}
+										fetchReplies={() => fetchReplies()}
+										uuid={reply.uuid}
+										author={reply.author}
+										profilePic={reply.profilePic}
+										content={reply.content}
+										likes={reply.likes}
+										timestamp={reply.timestamp}
+										replyText={replyText}
+										repliedTo={''}
+										post={post}
+										replies={[]}
+										// handleReplyChange={() => handleReplyChange(e.target.value)}
+									/>
+								))}
+							</div>
+						)
+					)}{' '}
 				</div>
 			</div>
 		</div>

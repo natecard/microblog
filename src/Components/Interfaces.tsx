@@ -1,5 +1,7 @@
 export interface post {
+	fetchReplies(): void;
 	fetchPosts(): void;
+	post: any;
 	uuid: string;
 	author: string;
 	profilePic: string;
@@ -14,6 +16,10 @@ export interface userInfo {
 	email: string;
 }
 export interface replies {
+	fetchPosts(): void;
+	post: post;
+	replies: Array<replies>;
+	reply: any;
 	uuid: string;
 	author: string;
 	profilePic: string;
@@ -21,4 +27,6 @@ export interface replies {
 	likes: number;
 	timestamp: string;
 	repliedTo: string;
+	replyText: string;
+	fetchReplies(): void;
 }

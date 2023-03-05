@@ -8,18 +8,19 @@ export default function Reply(props: replies) {
 	const {replyText, setReplyText, user} = useContext(Context) as {
 		replyText: string;
 		setReplyText: Function;
-		user: userInfo[];
+		user: userInfo;
 	};
 	const [showTextArea, setShowTextArea] = useState(false);
-	const [alreadyClicked, setAlreadyClicked] = useState(
-		() => JSON.parse(sessionStorage.getItem(`${props.uuid}`)) || false
-	);
+	const [alreadyClicked, setAlreadyClicked] = useState(() => {
+		const item = sessionStorage.getItem(`${props.uuid}`);
+		return item ? JSON.parse(item) : false;
+	});
 	useEffect(() => {
 		sessionStorage.setItem(`${props.uuid}`, JSON.stringify(alreadyClicked));
 	}, [alreadyClicked]);
 
-	function likePostButton() {
-		likePost(props.uuid, event);
+	function likePostButton(event: React.MouseEvent<HTMLButtonElement>) {
+		likePost(props.uuid);
 		setAlreadyClicked((prevVal: boolean) => !prevVal);
 	}
 	async function replyToPost(event: any) {
@@ -37,23 +38,23 @@ export default function Reply(props: replies) {
 		setReplyText('');
 		textAreaToggle();
 		props.fetchPosts();
+		props.fetchReplies();
 		console.error(error);
 	}
-	async function likePost(uuid: string, event: any) {
-		event.preventDefault();
+	async function likePost(uuid: string) {
 		if (alreadyClicked == false) {
-			const {error} = await supabase.rpc('vote', {
+			const {error} = await supabase.rpc('vote_replies', {
 				quote_id: uuid,
 				increment_num: 1,
 			});
-			props.fetchPosts();
+			props.fetchReplies();
 			if (error) console.error(error);
 		} else {
-			const {error} = await supabase.rpc('vote', {
+			const {error} = await supabase.rpc('vote_replies', {
 				quote_id: uuid,
 				increment_num: -1,
 			});
-			props.fetchPosts();
+			props.fetchReplies();
 			if (error) console.error(error);
 		}
 	}
@@ -63,7 +64,7 @@ export default function Reply(props: replies) {
 	return (
 		<div className="flex flex-col justify-center">
 			<div
-				className="grid	grid-cols-3	md:max-h-64	lg:px-16 md:w-[20rem] md:max-w-full min-w-full my-4 md:mx-4	rounded-md border-solid border shadow-md dark:shadow-white/70 bg-white text-black dark:bg-black dark:text-white"
+				className="grid	grid-cols-3	md:max-h-96	lg:px-16 md:w-[40rem] md:mx-4	rounded-md border-solid border shadow-md dark:shadow-white/70 bg-white text-black dark:bg-black dark:text-white"
 				id={props.uuid}
 			>
 				<div className="flex pl-4 pt-2 items-center justify-start col-start-1 md:col-start-1 col-span-3 row-start-1 row-span-1 flex-row">
@@ -80,10 +81,10 @@ export default function Reply(props: replies) {
 				</p>
 				<div
 					id={props.uuid}
-					className="row-start-4 col-span-3 flex place-content-evenly pb-2 items-center col-start-1"
+					className="row-start-4 col-span-3 flex place-content-evenly pb-1 items-center col-start-1"
 				>
 					<button
-						onClick={() => likePostButton(props.uuid, event)}
+						onClick={likePostButton}
 						className="flex flex-row uppercase rounded-md p-2 text-sm font-semibold items-center text-black md:text-xl lg:text-2xl bg-white hover:scale-110 dark:bg-black dark:text-white gap-2"
 					>
 						{' '}
@@ -144,7 +145,7 @@ export default function Reply(props: replies) {
 				<div className="flex col-span-3 pb-3">
 					<h1>Reply:</h1>
 					<textarea
-						className=" md:w-1/2 w-5/6 m-1 rounded-md dark:bg-black dark:border-white border dark:text-white text-black"
+						className=" md:w-1/2 w-5/6 m-1 rounded-md scroll-m-1 dark:bg-black dark:border-white border dark:text-white text-black"
 						value={replyText}
 						onChange={event => setReplyText(event.target.value)}
 					/>

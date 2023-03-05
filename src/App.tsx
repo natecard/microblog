@@ -18,16 +18,10 @@ export default function App() {
 	const [repliesArray, setRepliesArray] = useState<any[]>([]);
 	const [postText, setPostText] = useState('');
 	const [replyText, setReplyText] = useState('');
-	const [user, setUser] = useState(
-		() =>
-			JSON.parse(sessionStorage.getItem('user')) || [
-				{
-					name: '',
-					email: '',
-					profilePic: '',
-				},
-			]
-	);
+	const [user, setUser] = useState(() => {
+		const item = sessionStorage.getItem('user');
+		return item ? JSON.parse(item) : [{name: '', email: '', profilePic: ''}];
+	});
 	useEffect(() => {
 		sessionStorage.setItem('user', JSON.stringify(user));
 	}, [user]);
@@ -51,7 +45,7 @@ export default function App() {
 				setReplyText,
 			}}
 		>
-			<Header displayName={''} uuid={''} profilePic={''} email={''} />
+			<Header displayName={''} profilePic={''} email={''} />
 			<Routes>
 				<Route path="/" element={<SignIn />}></Route>
 				<Route path="/home" element={<SignIn />}></Route>

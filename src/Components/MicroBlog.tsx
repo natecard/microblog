@@ -17,22 +17,23 @@ export default function MicroBlog(props: post) {
 	} = useContext(Context) as {
 		replyText: string;
 		setReplyText: Function;
-		user: userInfo[];
-		postsArray: post[];
-		repliesArray: replies[];
-		replies: replies[];
+		user: userInfo;
+		postsArray: post;
+		repliesArray: replies;
+		replies: replies;
 		setReplies: any;
 	};
 	const [showTextArea, setShowTextArea] = useState(false);
-	const [alreadyClicked, setAlreadyClicked] = useState(
-		() => JSON.parse(sessionStorage.getItem(`${props.uuid}`)) || false
-	);
+	const [alreadyClicked, setAlreadyClicked] = useState(() => {
+		const item = sessionStorage.getItem(`${props.uuid}`);
+		return item ? JSON.parse(item) : false;
+	});
 	useEffect(() => {
 		sessionStorage.setItem(`${props.uuid}`, JSON.stringify(alreadyClicked));
 	}, [alreadyClicked]);
 
-	function likePostButton() {
-		likePost(props.uuid, event);
+	function likePostButton(event: React.MouseEvent<HTMLButtonElement>) {
+		likePost(props.uuid);
 		setAlreadyClicked((prevVal: boolean) => !prevVal);
 	}
 	async function replyToPost(event: any) {
@@ -50,10 +51,10 @@ export default function MicroBlog(props: post) {
 		setReplyText('');
 		textAreaToggle();
 		props.fetchPosts();
+		props.fetchReplies();
 		console.error(error);
 	}
-	async function likePost(uuid: string, event: any) {
-		event.preventDefault();
+	async function likePost(uuid: string) {
 		if (alreadyClicked == false) {
 			const {error} = await supabase.rpc('vote', {
 				quote_id: uuid,
@@ -76,7 +77,7 @@ export default function MicroBlog(props: post) {
 	return (
 		<div className="flex flex-col justify-center">
 			<div
-				className="grid	grid-cols-3	md:max-h-96	lg:px-16 md:min-w-fit md:max-w-full min-w-full my-4 md:mx-4	rounded-md border-solid border shadow-md dark:shadow-white/70 bg-white text-black dark:bg-black dark:text-white"
+				className="grid	grid-cols-3	md:max-h-full	lg:px-16 md:min-w-fit md:max-w-full min-w-full my-4 md:mx-4	rounded-md border-solid border shadow-md dark:shadow-white/70 bg-white text-black dark:bg-black dark:text-white"
 				id={props.uuid}
 			>
 				<div className="flex pl-4 pt-2 items-center justify-start col-start-1 md:col-start-1 col-span-3 row-start-1 row-span-1 flex-row">
@@ -96,7 +97,7 @@ export default function MicroBlog(props: post) {
 					className="row-start-4 col-span-3 flex place-content-evenly pb-2 items-center col-start-1"
 				>
 					<button
-						onClick={() => likePostButton(props.uuid, event)}
+						onClick={likePostButton}
 						className="flex flex-row uppercase rounded-md p-2 text-sm font-semibold items-center text-black md:text-xl lg:text-2xl bg-white hover:scale-110 dark:bg-black dark:text-white gap-2"
 					>
 						{' '}
