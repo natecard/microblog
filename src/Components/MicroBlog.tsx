@@ -30,23 +30,7 @@ export default function MicroBlog(props: post) {
 	useEffect(() => {
 		sessionStorage.setItem(`${props.uuid}`, JSON.stringify(alreadyClicked));
 	}, [alreadyClicked]);
-	//TODO Finish render useEffect for the replies
-	useEffect(() => {
-		setReplies(
-			postsArray
-				.filter(post =>
-					repliesArray.filter(reply => reply.repliedTo == post.uuid)
-				)
-				.map(post => ({
-					post,
-					replies: repliesArray.filter(
-						reply => reply.repliedTo == post.uuid
-						//spread matching reply repliedTo into the reply
-					),
-				}))
-		);
-	}, []);
-	// console.log(replies);
+
 	function likePostButton() {
 		likePost(props.uuid, event);
 		setAlreadyClicked((prevVal: boolean) => !prevVal);
@@ -187,7 +171,7 @@ export default function MicroBlog(props: post) {
 			) : (
 				<></>
 			)}
-			{repliesArray.length > 1 ? (
+			{/* {repliesArray.length > 1 ? (
 				<div className="replies">
 					{replies.map(reply => (
 						<Reply
@@ -207,7 +191,7 @@ export default function MicroBlog(props: post) {
 				</div>
 			) : (
 				<></>
-			)}
+			)} */}
 		</div>
 	);
 }

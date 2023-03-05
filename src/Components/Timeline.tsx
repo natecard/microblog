@@ -72,22 +72,26 @@ export default function Timeline() {
 			);
 		}
 	}
+	useEffect(() => {
+		fetchReplies();
+	}, [replies]);
 
-	// setReplies(
-	// repliesArray.map((item, i) => {
-	// const replyItems = item.repliesArray[i].content_array[i];
-	// return {
-	// author: replyItems.author,
-	// content: replyItems.content,
-	// likes: replyItems.likes,
-	// profilePic: replyItems.profilePic,
-	// timestamp: replyItems.timestamp,
-	// updated_at: replyItems.updated_at,
-	// uuid: replyItems.uuid,
-	// };
-	// });
-	// )
-	// }, []);
+	useEffect(() => {
+		setReplies(
+			postsArray
+				// .filter(
+				// 	post =>
+				// 		repliesArray.filter(reply => reply.repliedTo == post.uuid).length >
+				// 		0
+				// )
+				.map(post => ({
+					post,
+					replies: repliesArray.filter(reply => reply.repliedTo == post.uuid),
+				}))
+		);
+	}, [postsArray]);
+	console.log(replies);
+
 	async function savePost(event: any) {
 		event.preventDefault();
 		const {data, error} = await supabase.from('posts').insert([
@@ -136,26 +140,10 @@ export default function Timeline() {
 			)}
 			<div id="post-card" className="flex-col flex items-center text-2xl pt-5">
 				<div className="flex flex-col lg:w-[50rem] ">
-					{postsArray.map(post => (
-						<MicroBlog
-							key={post.uuid}
-							replyToPost={() => replyToPost(event)}
-							fetchPosts={() => fetchPosts()}
-							uuid={post.uuid}
-							author={post.author}
-							profilePic={post.profilePic}
-							content={post.content}
-							likes={post.likes}
-							timestamp={post.timestamp}
-							replyText={replyText}
-							replies={replies}
-							handleReplyChange={() => handleReplyChange(e.target.value)}
-						/>
-					))}{' '}
-					{/* {/* </div> */}
-					{/* {postsArray.map(post => {
-						return (
+					{replies.map(({post, replies}) => (
+						<div key={post.uuid}>
 							<MicroBlog
+								post={post}
 								key={post.uuid}
 								replyToPost={() => replyToPost(event)}
 								fetchPosts={() => fetchPosts()}
@@ -166,10 +154,27 @@ export default function Timeline() {
 								likes={post.likes}
 								timestamp={post.timestamp}
 								replyText={replyText}
+								replies={replies}
 								handleReplyChange={() => handleReplyChange(e.target.value)}
 							/>
-						);
-					})} */}
+							{replies.map(reply => (
+								<Reply
+									reply={reply}
+									key={reply.uuid}
+									replyToPost={() => replyToPost(event)}
+									fetchPosts={() => fetchPosts()}
+									uuid={reply.uuid}
+									author={reply.author}
+									profilePic={reply.profilePic}
+									content={reply.content}
+									likes={reply.likes}
+									timestamp={reply.timestamp}
+									replyText={replyText}
+									handleReplyChange={() => handleReplyChange(e.target.value)}
+								/>
+							))}
+						</div>
+					))}{' '}
 				</div>
 			</div>
 		</div>
