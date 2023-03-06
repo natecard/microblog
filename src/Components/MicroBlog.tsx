@@ -5,22 +5,10 @@ import {supabase} from '../supabaseClient';
 import {nanoid} from 'nanoid';
 
 export default function MicroBlog(props: post) {
-	const {
-		replyText,
-		setReplyText,
-		user,
-		repliesArray,
-		postsArray,
-		setReplies,
-		replies,
-	} = useContext(Context) as {
+	const {replyText, setReplyText, user} = useContext(Context) as {
 		replyText: string;
 		setReplyText: Function;
 		user: userInfo;
-		postsArray: post;
-		repliesArray: replies;
-		replies: replies;
-		setReplies: any;
 	};
 	const [showTextArea, setShowTextArea] = useState(false);
 	const [alreadyClicked, setAlreadyClicked] = useState(() => {
@@ -154,24 +142,35 @@ export default function MicroBlog(props: post) {
 					</button>
 				</div>
 			</div>
-			{showTextArea ? (
-				<div className="flex col-span-3 py-3">
-					<h1>Reply:</h1>
-					<textarea
-						className=" md:w-1/2 w-5/6 m-1 rounded-md dark:bg-black dark:border-gray-700 border dark:text-white text-black"
-						value={replyText}
-						onChange={event => setReplyText(event.target.value)}
-					/>
-					<button
-						onClick={() => replyToPost(event)}
-						className="flex flex-row uppercase rounded-md p-2 text-sm font-semibold items-center text-black md:text-xl lg:text-2xl bg-white dark:bg-black hover:animate-pulse dark:text-white gap-2"
-					>
-						Send
-					</button>
-				</div>
-			) : (
-				<></>
-			)}
+			<div className="flex justify-end ">
+				{showTextArea ? (
+					<div className="grid grid-cols-3 grid-row-3 items-end py-3 md:max-h-96 lg:px-16 sm:w-11/12 w-full md:mx-4 border-spacing-2 border-x border-b rounded-md border-gray-700 bg-white text-black dark:bg-black dark:text-white ">
+						<div className="flex pl-4 py-2 items-center justify-start col-start-1 md:col-start-1 col-span-3 row-start-1 row-span-1 flex-row">
+							<img
+								className=" items-center rounded-full h-6 md:h-12 lg:h-14"
+								src={props.profilePic}
+							/>
+							<h2 className="col-span-2 pl-3 text-lg md:text-3xl font-semibold">
+								{props.author}
+							</h2>
+						</div>
+						<textarea
+							className=" row-start-2 row-span-1 col-start-1 pl-3 col-span-3  w-5/6 m-1 rounded-md dark:bg-black dark:border-gray-700 border dark:text-white text-black"
+							value={replyText}
+							onChange={event => setReplyText(event.target.value)}
+							placeholder="Reply"
+						/>
+						<button
+							onClick={() => replyToPost(event)}
+							className="flex flex-row uppercase rounded-md p-2 text-sm font-semibold items-center text-black md:text-xl lg:text-2xl bg-white dark:bg-black hover:animate-pulse dark:text-white gap-2"
+						>
+							Send
+						</button>
+					</div>
+				) : (
+					<></>
+				)}
+			</div>
 		</div>
 	);
 }

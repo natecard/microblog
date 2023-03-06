@@ -63,7 +63,7 @@ export default function Reply(props: replies) {
 	return (
 		<div className="flex flex-col place-items-end justify-center">
 			<div
-				className="grid	grid-cols-3 md:max-h-96	lg:px-16 max-w-full w-full md:mx-4 border-spacing-2 border-x border-b rounded-md border-gray-700 bg-white text-black dark:bg-black dark:text-white"
+				className="grid	grid-cols-3 md:max-h-96	lg:px-16 sm:w-11/12 w-full md:mx-4 border-spacing-2 border-x border-b rounded-md border-gray-700 bg-white text-black dark:bg-black dark:text-white"
 				id={props.uuid}
 			>
 				<div className="flex pl-4 pt-2 items-center justify-start col-start-1 md:col-start-1 col-span-3 row-start-1 row-span-1 flex-row">
@@ -141,12 +141,21 @@ export default function Reply(props: replies) {
 				</div>
 			</div>
 			{showTextArea ? (
-				<div className="flex col-span-3 my-3">
-					<h1>Reply:</h1>
+				<div className="grid grid-cols-3 grid-row-3 items-end py-3 md:max-h-96 lg:px-16 sm:w-11/12 w-full md:mx-4 border-spacing-2 border-x border-b rounded-md border-gray-700 bg-white text-black dark:bg-black dark:text-white ">
+					<div className="flex pl-4 py-2 items-center justify-start col-start-1 md:col-start-1 col-span-3 row-start-1 row-span-1 flex-row">
+						<img
+							className=" items-center rounded-full h-6 md:h-12 lg:h-14"
+							src={props.profilePic}
+						/>
+						<h2 className="col-span-2 pl-3 text-lg md:text-3xl font-semibold">
+							{props.author}
+						</h2>
+					</div>
 					<textarea
-						className=" md:w-1/2 w-5/6 m-1 rounded-md scroll-m-1 dark:bg-black dark:border-gray-700 border dark:text-white text-black"
+						className=" row-start-2 row-span-1 col-start-1 pl-3 col-span-3  w-5/6 m-1 rounded-md dark:bg-black dark:border-gray-700 border dark:text-white text-black"
 						value={replyText}
 						onChange={event => setReplyText(event.target.value)}
+						placeholder="Reply"
 					/>
 					<button
 						onClick={() => replyToPost(event)}
