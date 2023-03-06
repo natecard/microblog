@@ -1,9 +1,8 @@
-import React, {ReactEventHandler, useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {post, replies, userInfo} from './Interfaces';
 import {Context} from '../App';
 import MicroBlog from './MicroBlog';
 import {supabase} from '../supabaseClient';
-import SignOutUser from '../Auth/SignOutUser';
 import {nanoid} from 'nanoid';
 import Reply from './Reply';
 
@@ -40,7 +39,7 @@ export default function Timeline() {
 		setAlreadyClicked: any;
 	};
 
-	async function initalFetchPosts() {
+	async function fetchPosts() {
 		const {data, error} = await supabase
 			.from('posts')
 			.select('*')
@@ -50,34 +49,24 @@ export default function Timeline() {
 		}
 	}
 
-	async function fetchPosts() {
-		const posts = supabase
-			.channel('custom-all-channel')
-			.on(
-				'postgres_changes',
-				{event: '*', schema: 'public', table: 'posts'},
-				payload => {
-					console.log('Change received!', payload);
-				}
-			)
-			.subscribe();
-	}
-
 	async function fetchReplies() {
-		const {data, error} = await supabase.rpc('group_replies', {});
-		if (data) {
+		let {data: replies, error} = await supabase
+			.from('replies')
+			.select('*')
+			.order('likes', {ascending: false});
+		if (replies) {
 			setRepliesArray(
-				data.flatMap((reply: any) =>
-					reply.content_array.flatMap((item: replies) => ({
+				replies.map(item => {
+					return {
 						author: item.author,
 						uuid: item.uuid,
 						profilePic: item.profilePic,
 						content: item.content,
 						likes: item.likes,
 						timestamp: item.timestamp,
-						repliedTo: reply.replied_to,
-					}))
-				)
+						repliedTo: item.replied_to,
+					};
+				})
 			);
 		} else {
 			error;
@@ -86,20 +75,14 @@ export default function Timeline() {
 	}
 	useEffect(() => {
 		fetchReplies();
-	}, [replies]);
+	}, [postsArray]);
 
 	useEffect(() => {
 		setReplies(
-			postsArray
-				// .filter(
-				// 	post =>
-				// 		repliesArray.filter(reply => reply.repliedTo == post.uuid).length >
-				// 		0
-				// )
-				.map(post => ({
-					post,
-					replies: repliesArray.filter(reply => reply.repliedTo == post.uuid),
-				}))
+			postsArray.map(post => ({
+				post,
+				replies: repliesArray.filter(reply => reply.repliedTo == post.uuid),
+			}))
 		);
 	}, [postsArray]);
 
@@ -119,14 +102,15 @@ export default function Timeline() {
 		setPostText('');
 	}
 	useEffect(() => {
-		initalFetchPosts();
+		fetchPosts();
 		fetchReplies();
 	}, []);
 
 	return (
 		<div className="flex px-2 md:px-32 flex-col justify-center w-screen dark:text-white text-black">
 			{user.displayName !== undefined || null ? (
-				<div>
+				<div className="xl:text-3xl md:text-2xl text-center">
+					<h1>{`Hi, ${user.displayName} check out what is happening...`}</h1>
 					<form>
 						<div className="flex mt-3 items-center flex-col">
 							<label className="" htmlFor="post">
@@ -144,12 +128,11 @@ export default function Timeline() {
 							</button>
 						</div>
 					</form>
-					<h1>{`Hi, ${user.displayName} check out what is happening...`}</h1>
 				</div>
 			) : (
 				<></>
 			)}
-			<div id="post-card" className="flex-col flex items-center text-2xl pt-5">
+			<div id="post-card" className="flex-col flex items-center text-2xl">
 				<div className="flex flex-col lg:w-[50rem] ">
 					{replies.map(
 						({post, replies}): JSX.Element => (
@@ -166,7 +149,7 @@ export default function Timeline() {
 									likes={post.likes}
 									timestamp={post.timestamp}
 									replyText={replyText}
-									// handleReplyChange={() => handleReplyChange(e.target.value)}
+									length={replies.length}
 								/>
 								{replies.map((reply: replies) => (
 									<Reply
@@ -184,7 +167,6 @@ export default function Timeline() {
 										repliedTo={''}
 										post={post}
 										replies={[]}
-										// handleReplyChange={() => handleReplyChange(e.target.value)}
 									/>
 								))}
 							</div>

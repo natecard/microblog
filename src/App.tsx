@@ -6,7 +6,6 @@ import {post, userInfo} from './Components/Interfaces';
 import Header from './Components/Header';
 import SignOutButton from './Auth/SignOutUser';
 import Timeline from './Components/Timeline';
-import Landing from './Auth/SignIn';
 import Footer from './Components/Footer';
 
 export const Context = createContext<any>([]);

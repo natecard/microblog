@@ -1,5 +1,5 @@
-import React, {useContext, useEffect} from 'react';
-import {Link, Path} from 'react-router-dom';
+import React, {useContext} from 'react';
+import {Link} from 'react-router-dom';
 import {userInfo} from './Interfaces';
 import {Context} from '../App';
 import {supabase} from '../supabaseClient';

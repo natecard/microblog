@@ -3,7 +3,6 @@ import {post, replies, userInfo} from './Interfaces';
 import {Context} from '../App';
 import {supabase} from '../supabaseClient';
 import {nanoid} from 'nanoid';
-import Reply from './Reply';
 
 export default function MicroBlog(props: post) {
 	const {
@@ -35,6 +34,7 @@ export default function MicroBlog(props: post) {
 	function likePostButton(event: React.MouseEvent<HTMLButtonElement>) {
 		likePost(props.uuid);
 		setAlreadyClicked((prevVal: boolean) => !prevVal);
+		props.fetchPosts();
 	}
 	async function replyToPost(event: any) {
 		event.preventDefault();
@@ -60,36 +60,35 @@ export default function MicroBlog(props: post) {
 				quote_id: uuid,
 				increment_num: 1,
 			});
-			props.fetchPosts();
 			if (error) console.error(error);
 		} else {
 			const {error} = await supabase.rpc('vote', {
 				quote_id: uuid,
 				increment_num: -1,
 			});
-			props.fetchPosts();
 			if (error) console.error(error);
 		}
 	}
+
 	function textAreaToggle() {
 		setShowTextArea((prevVal: boolean) => !prevVal);
 	}
 	return (
-		<div className="flex flex-col justify-center">
+		<div className="flex flex-col my-2 justify-center">
 			<div
-				className="grid	grid-cols-3	md:max-h-full	lg:px-16 md:min-w-fit md:max-w-full min-w-full my-4 md:mx-4	rounded-md border-solid border shadow-md dark:shadow-white/70 bg-white text-black dark:bg-black dark:text-white"
+				className="grid	grid-cols-3 md:max-h-full lg:px-16 md:min-w-fit md:max-w-full min-w-full md:mx-4 border rounded-md border-gray-700  bg-white text-black dark:bg-black dark:text-white mt-4"
 				id={props.uuid}
 			>
 				<div className="flex pl-4 pt-2 items-center justify-start col-start-1 md:col-start-1 col-span-3 row-start-1 row-span-1 flex-row">
 					<img
-						className=" items-center rounded-full h-10 md:h-12 lg:h-14"
+						className=" items-center rounded-full h-6 md:h-12 lg:h-14"
 						src={props.profilePic}
 					/>
-					<h2 className="col-span-2 pl-3 md:text-3xl font-semibold">
+					<h2 className="col-span-2 pl-3 text-lg md:text-3xl font-semibold">
 						{props.author}
 					</h2>
 				</div>
-				<p className="row-start-2 row-span-2 p-2 col-start-1 pl-3 col-span-3 text-left flex font-medium text-xl md:font-light md:text-2xl lg:font-light lg:text-3xl">
+				<p className="row-start-2 row-span-2 p-2 col-start-1 pl-3 col-span-3 text-left flex font-medium text-base md:font-light md:text-2xl lg:font-light lg:text-3xl">
 					{props.content}
 				</p>
 				<div
@@ -136,6 +135,7 @@ export default function MicroBlog(props: post) {
 						onClick={() => textAreaToggle()}
 						className="flex flex-row uppercase rounded-md p-2 text-sm font-semibold items-center text-black md:text-xl lg:text-2xl bg-white dark:bg-black hover:animate-pulse dark:text-white gap-2"
 					>
+						{props.length > 1 ? props.length : <></>}
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
@@ -155,10 +155,10 @@ export default function MicroBlog(props: post) {
 				</div>
 			</div>
 			{showTextArea ? (
-				<div className="flex col-span-3 pb-3">
+				<div className="flex col-span-3 py-3">
 					<h1>Reply:</h1>
 					<textarea
-						className=" md:w-1/2 w-5/6 m-1 rounded-md dark:bg-black dark:border-white border dark:text-white text-black"
+						className=" md:w-1/2 w-5/6 m-1 rounded-md dark:bg-black dark:border-gray-700 border dark:text-white text-black"
 						value={replyText}
 						onChange={event => setReplyText(event.target.value)}
 					/>
@@ -166,33 +166,12 @@ export default function MicroBlog(props: post) {
 						onClick={() => replyToPost(event)}
 						className="flex flex-row uppercase rounded-md p-2 text-sm font-semibold items-center text-black md:text-xl lg:text-2xl bg-white dark:bg-black hover:animate-pulse dark:text-white gap-2"
 					>
-						Submit
+						Send
 					</button>
 				</div>
 			) : (
 				<></>
 			)}
-			{/* {repliesArray.length > 1 ? (
-				<div className="replies">
-					{replies.map(reply => (
-						<Reply
-							key={reply.uuid}
-							replyToPost={() => replyToPost(event)}
-							fetchPosts={() => fetchPosts()}
-							uuid={reply.uuid}
-							author={reply.author}
-							profilePic={reply.profilePic}
-							content={reply.content}
-							likes={reply.likes}
-							timestamp={reply.timestamp}
-							repliedTo={reply.repliedTo}
-							replyText={replyText}
-						/>
-					))}
-				</div>
-			) : (
-				<></>
-			)} */}
 		</div>
 	);
 }

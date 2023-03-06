@@ -9,6 +9,7 @@ export interface post {
 	likes: number;
 	timestamp: string;
 	replyText: string;
+	length: number;
 }
 export interface userInfo {
 	displayName: string;
