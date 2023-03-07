@@ -46,9 +46,9 @@ export default function App() {
 		>
 			<Header displayName={''} profilePic={''} email={''} />
 			<Routes>
-				<Route path="/microblog/" element={<SignIn />}></Route>
-				<Route path="/microblog/home" element={<SignIn />}></Route>
-				<Route path="/microblog/timeline" element={<Timeline />}></Route>
+				<Route path="/" element={<SignIn />}></Route>
+				<Route path="/home" element={<SignIn />}></Route>
+				<Route path="/timeline" element={<Timeline />}></Route>
 			</Routes>
 			<Footer />
 		</Context.Provider>
