@@ -56,6 +56,8 @@ export default function MicroBlog(props: post) {
 			});
 			if (error) console.error(error);
 		}
+		props.fetchPosts();
+		props.fetchReplies();
 	}
 
 	function textAreaToggle() {
