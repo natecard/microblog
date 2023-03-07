@@ -1,12 +1,13 @@
 import React, {useContext} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
 import {userInfo} from './Interfaces';
 import {Context} from '../App';
 import {supabase} from '../supabaseClient';
 import SignOutUser from '../Auth/SignOutUser';
 
 export default function Header(props: userInfo) {
-	const {user, setUser} = useContext(Context);
+	const {user} = useContext(Context);
+	const location = useLocation();
 
 	return (
 		<div
@@ -24,16 +25,28 @@ export default function Header(props: userInfo) {
 		dark:shadow-white/40"
 		>
 			<div className="flex-1">
-				<Link to="/timeline">
-					<p className="btn btn-ghost uppercase text-xl md:text-3xl lg:text-5xl">
-						subforuma
-					</p>
-				</Link>
+				{location.pathname === '/home' ? (
+					<Link to="/timeline">
+						<p className="btn btn-ghost uppercase text-xl md:text-3xl lg:text-5xl">
+							subforuma
+						</p>
+					</Link>
+				) : (
+					<Link to="/home">
+						<p className="btn btn-ghost uppercase text-xl md:text-3xl lg:text-5xl">
+							subforuma
+						</p>
+					</Link>
+				)}
 			</div>
-			{user !== null ? (
-				<div className="">
-					<div className="flex-none md:block hidden gap-2">
-						<div className=" form-control">
+			{user == null || undefined ? (
+				<Link to="/home">
+					<button className="p-3 box-content uppercase">Sign In</button>
+				</Link>
+			) : (
+				<div className="flex flex-row">
+					<div className="md:block hidden gap-2">
+						<div>
 							<input
 								type="text"
 								placeholder="Search"
@@ -41,34 +54,19 @@ export default function Header(props: userInfo) {
 							/>
 						</div>
 					</div>
-
-					<div className="dropdown dark:bg-black dark:text-white text-black dropdown-end">
-						<label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-							<div className="w-10 rounded-full">
-								<img src={user.profilePic} />
-							</div>
-						</label>
-						<ul
-							tabIndex={0}
-							className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 dark:bg-black rounded-box w-52"
-						>
-							<li>
-								<p className="justify-between">
-									Profile
-									<span className="badge">New</span>
-								</p>
-							</li>
-							<li>
-								<p>Settings</p>
-							</li>
-							<li>
-								<SignOutUser />
-							</li>
-						</ul>
+					<div className="align-baseline flex flex-row dark:bg-black dark:text-white text-black">
+						{user.profilePic ? (
+							<img
+								alt="user profile picture"
+								className="w-10 h-10 rounded-full"
+								src={user.profilePic}
+							/>
+						) : (
+							<></>
+						)}
+						<SignOutUser />
 					</div>
 				</div>
-			) : (
-				<Link to="/">Sign In</Link>
 			)}
 		</div>
 	);
