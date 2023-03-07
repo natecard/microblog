@@ -22,6 +22,7 @@ export default function Reply(props: replies) {
 	function likePostButton(event: React.MouseEvent<HTMLButtonElement>) {
 		likePost(props.uuid);
 		setAlreadyClicked((prevVal: boolean) => !prevVal);
+		props.fetchPosts();
 		props.fetchReplies();
 	}
 	async function replyToPost(event: any) {
@@ -55,6 +56,8 @@ export default function Reply(props: replies) {
 			});
 			if (error) console.error(error);
 		}
+		props.fetchPosts();
+		props.fetchReplies();
 	}
 
 	function textAreaToggle() {
