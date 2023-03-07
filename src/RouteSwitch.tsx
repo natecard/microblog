@@ -3,7 +3,7 @@ import App from './App';
 
 export default function RouteSwitch() {
 	return (
-		<BrowserRouter basename="/microblog">
+		<BrowserRouter basename="/">
 			<App />
 		</BrowserRouter>
 	);
