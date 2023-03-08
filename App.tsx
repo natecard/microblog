@@ -5,6 +5,8 @@ import Header from './src/Components/Header'
 import Footer from './src/Components/Footer'
 import Timeline from './src/Components/Timeline';
 import SignIn from './src/Auth/SignIn';
+import { supabase } from './supabaseClient';
+
 export const Context = createContext<any>([]);
 
 export default function App() {
@@ -22,6 +24,44 @@ export default function App() {
 		sessionStorage.setItem('user', JSON.stringify(user));
 	}, [user]);
 
+	async function fetchReplies() {
+		let {data: replies, error} = await supabase
+			.from('replies')
+			.select('*')
+			.order('likes', {ascending: false});
+		if (replies) {
+			setRepliesArray(
+				replies.map(item => {
+					return {
+						author: item.author,
+						uuid: item.uuid,
+						profilePic: item.profilePic,
+						content: item.content,
+						likes: item.likes,
+						timestamp: item.timestamp,
+						repliedTo: item.replied_to,
+					};
+				})
+			);
+		} else {
+			error;
+			console.error(error);
+		}
+	}
+	async function fetchPosts() {
+		const {data, error} = await supabase
+			.from('posts')
+			.select('*')
+			.order('timestamp', {ascending: false});
+		if (data) {
+			setPostsArray(data);
+		}
+	}
+	useEffect(() =>{
+		fetchPosts()
+		fetchReplies()
+	},[])
+	
 	return (
 		<Context.Provider
 			value={{
@@ -39,6 +79,8 @@ export default function App() {
 				setReplies,
 				replyText,
 				setReplyText,
+				fetchPosts,
+				fetchReplies,
 			}}
 		>
 			<Header displayName={''} profilePic={''} email={''} />
