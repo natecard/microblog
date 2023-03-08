@@ -39,6 +39,9 @@ export default function SignIn() {
 	useEffect(() => {
 		fetchUserData();
 	}, [user]);
+	useEffect(() => {
+		fetchUserData();
+	},[]);
 
 	return (
 		<div className=" dark:text-white p-8 md:px-36 md:py-12 lg:px-72 lg:py-40 xl:px-96 xl:py-72  min-h-screen dark:bg-black">

@@ -9,9 +9,6 @@ export default function SignOutUser() {
 		if (user !== null || undefined) {
 			const {error} = await supabase.auth.signOut();
 			console.log('logged out');
-			sessionStorage.clear();
-			console.log('sessionStorage cleared');
-			localStorage.removeItem('user');
 			setUser({displayName: '', profilePic: '', uid: '', email: ''});
 		} else {
 			console.log('No one is signed in!');
