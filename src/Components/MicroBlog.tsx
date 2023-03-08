@@ -39,7 +39,7 @@ export default function MicroBlog(props: post) {
 		setReplyText('');
 		textAreaToggle();
 		props.fetchPosts();
-		props.fetchReplies();
+		
 		console.error(error);
 	}
 	async function likePost(uuid: string) {
@@ -57,7 +57,7 @@ export default function MicroBlog(props: post) {
 			if (error) console.error(error);
 		}
 		props.fetchPosts();
-		props.fetchReplies();
+		
 	}
 
 	function textAreaToggle() {

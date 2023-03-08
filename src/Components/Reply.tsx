@@ -23,7 +23,7 @@ export default function Reply(props: replies) {
 		likePost(props.uuid);
 		setAlreadyClicked((prevVal: boolean) => !prevVal);
 		props.fetchPosts();
-		props.fetchReplies();
+		
 	}
 	async function replyToPost(event: any) {
 		event.preventDefault();
@@ -39,7 +39,7 @@ export default function Reply(props: replies) {
 		]);
 		setReplyText('');
 		textAreaToggle();
-		props.fetchReplies();
+		
 		console.error(error);
 	}
 	async function likePost(uuid: string) {
@@ -57,7 +57,7 @@ export default function Reply(props: replies) {
 			if (error) console.error(error);
 		}
 		props.fetchPosts();
-		props.fetchReplies();
+		
 	}
 
 	function textAreaToggle() {
