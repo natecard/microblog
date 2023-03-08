@@ -40,43 +40,39 @@ export default function Timeline() {
 		setAlreadyClicked: any;
 	};
 
-	async function fetchPosts() {
-		const {data, error} = await supabase
-			.from('posts')
-			.select('*')
-			.order('timestamp', {ascending: false});
-		if (data) {
-			setPostsArray(data);
-		}
+	
+		async function fetchPosts() {
+			const {data, error} = await supabase
+				.from('posts')
+				.select('*')
+				.order('timestamp', {ascending: false});
+			if (data) {
+				setPostsArray(data);
+			}
+			let {data: replies, error: errors} = await supabase
+				.from('replies')
+				.select('*')
+				.order('likes', {ascending: false});
+			if (replies) {
+				setRepliesArray(
+					replies.map(item => {
+						return {
+							author: item.author,
+							uuid: item.uuid,
+							profilePic: item.profilePic,
+							content: item.content,
+							likes: item.likes,
+							timestamp: item.timestamp,
+							repliedTo: item.replied_to,
+						};
+					})
+				);
+			} else {
+				errors;
+				error;
+				console.error(error,errors);
+			}
 	}
-
-	async function fetchReplies() {
-		let {data: replies, error} = await supabase
-			.from('replies')
-			.select('*')
-			.order('likes', {ascending: false});
-		if (replies) {
-			setRepliesArray(
-				replies.map(item => {
-					return {
-						author: item.author,
-						uuid: item.uuid,
-						profilePic: item.profilePic,
-						content: item.content,
-						likes: item.likes,
-						timestamp: item.timestamp,
-						repliedTo: item.replied_to,
-					};
-				})
-			);
-		} else {
-			error;
-			console.error(error);
-		}
-	}
-	useEffect(() => {
-		fetchReplies();
-	}, [postsArray]);
 
 	useEffect(() => {
 		setReplies(
@@ -103,7 +99,6 @@ export default function Timeline() {
 		setPostText('');
 	}
 	useEffect(() => {
-		fetchReplies();
 		fetchPosts();
 	}, []);
 
@@ -142,7 +137,6 @@ export default function Timeline() {
 									post={post}
 									key={post.uuid}
 									fetchPosts={() => fetchPosts()}
-									fetchReplies={() => fetchReplies()}
 									uuid={post.uuid}
 									author={post.author}
 									profilePic={post.profilePic}
@@ -157,7 +151,6 @@ export default function Timeline() {
 										reply={reply}
 										key={reply.uuid}
 										fetchPosts={() => fetchPosts()}
-										fetchReplies={() => fetchReplies()}
 										uuid={reply.uuid}
 										author={reply.author}
 										profilePic={reply.profilePic}

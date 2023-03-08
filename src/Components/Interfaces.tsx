@@ -1,5 +1,4 @@
 export interface post {
-	fetchReplies(): void;
 	fetchPosts(): void;
 	post: any;
 	uuid: string;
@@ -29,5 +28,4 @@ export interface replies {
 	timestamp: string;
 	repliedTo: string;
 	replyText: string;
-	fetchReplies(): void;
 }
