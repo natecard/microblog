@@ -5,6 +5,7 @@ import {Context} from '../../App';
 import {supabase} from '../../supabaseClient';
 import {nanoid} from 'nanoid';
 import Reply from './Reply';
+import Footer from './Footer';
 
 export default function Timeline() {
 	const {
@@ -102,12 +103,12 @@ export default function Timeline() {
 		setPostText('');
 	}
 	useEffect(() => {
-		fetchPosts();
 		fetchReplies();
+		fetchPosts();
 	}, []);
 
 	return (
-		<div className="flex px-2 md:px-32 flex-col justify-center w-screen dark:text-white text-black">
+		<div className="flex px-2 md:px-32 flex-col justify-center min-h-screen dark:bg-black bg-white w-screen dark:text-white text-black">
 			{user.displayName !== undefined || null ? (
 				<div className="xl:text-3xl md:text-2xl text-center">
 					<h1>{`Hi, ${user.displayName} check out what is happening...`}</h1>
@@ -174,6 +175,7 @@ export default function Timeline() {
 					)}{' '}
 				</div>
 			</div>
+			<Footer/>
 		</div>
 	);
 }

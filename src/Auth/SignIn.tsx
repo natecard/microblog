@@ -2,6 +2,7 @@ import {useContext, useEffect} from 'react';
 import {AuthUi, supabase} from '../../supabaseClient';
 import {Context} from '../../App';
 import {useNavigate} from 'react-router-dom';
+import Footer from '../Components/Footer';
 
 export default function SignIn() {
 	const {user, setUser} = useContext(Context);
@@ -11,7 +12,7 @@ export default function SignIn() {
 			// console.log(session);
 			navigate('/timeline');
 		} else {
-			navigate('/home');
+			navigate('/');
 		}
 	});
 
@@ -40,7 +41,9 @@ export default function SignIn() {
 	}, [user]);
 
 	return (
-		<div className="dark:text-white p-8 md:px-36 md:py-12 lg:px-72 lg:py-40 xl:px-96 xl:py-72 h-screen dark:bg-black">
+		<div className=" dark:text-white p-8 md:px-36 md:py-12 lg:px-72 lg:py-40 xl:px-96 xl:py-72  min-h-screen dark:bg-black">
+			<p className='text-xl'>If you don't want to create an account you can click on the Subforuma
+				header to view the timeline</p>
 			<h1 className="text-2xl pb-5">Welcome to Subforuma</h1>
 			<p className="md:text-base">
 				The microblogging site that lets you share your musings, ideas, and
@@ -48,6 +51,7 @@ export default function SignIn() {
 				more than just a social network - it's a platform for content creation
 				and expression.
 			</p>
+			
 			<p className="text-xl py-5">With Subforuma, you can:</p>
 			<ul className="list-outside md:text-base list-disc">
 				<li>
@@ -66,10 +70,11 @@ export default function SignIn() {
 				Whether you want to share a quick tip, a funny story, or a deep insight,
 				Subforuma is the place for you. Join today and start microblogging!{' '}
 				<br />
-				If you don't want to create an account you can click on the Subforuma
-				header to view the timeline
 			</p>
-			{user.uid == '' ? (
+				
+			{user.uid !== '' ? (
+				<></>
+			) : (
 				<div className="pt-5 pb-32">
 					<AuthUi
 						supabaseClient={supabase}
@@ -77,9 +82,8 @@ export default function SignIn() {
 						magicLink={true}
 					/>
 				</div>
-			) : (
-				<></>
 			)}
+			<Footer/>
 		</div>
 	);
 }

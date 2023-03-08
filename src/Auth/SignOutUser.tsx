@@ -7,12 +7,12 @@ export default function SignOutUser() {
 	async function signOutActiveUser() {
 		// Sign out of Supabase.
 		if (user !== null || undefined) {
+			const {error} = await supabase.auth.signOut();
 			console.log('logged out');
 			sessionStorage.clear();
 			console.log('sessionStorage cleared');
 			localStorage.removeItem('user');
 			setUser({displayName: '', profilePic: '', uid: '', email: ''});
-			const {error} = await supabase.auth.signOut();
 		} else {
 			console.log('No one is signed in!');
 		}

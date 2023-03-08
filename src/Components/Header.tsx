@@ -24,22 +24,22 @@ export default function Header(props: userInfo) {
 		dark:shadow-white/40"
 		>
 			<div className="flex-1">
-				{location.pathname === '/home' ? (
+				{location.pathname === '/' ? (
 					<Link to="/timeline">
 						<p className="btn btn-ghost uppercase text-xl md:text-3xl lg:text-5xl">
 							subforuma
 						</p>
 					</Link>
 				) : (
-					<Link to="/home">
+					<Link to="/">
 						<p className="btn btn-ghost uppercase text-xl md:text-3xl lg:text-5xl">
 							subforuma
 						</p>
 					</Link>
 				)}
 			</div>
-			{user == null || undefined ? (
-				<Link to="/home">
+			{user.uuid == '' ? (
+				<Link to="/">
 					<button className="p-3 box-content uppercase">Sign In</button>
 				</Link>
 			) : (
@@ -63,7 +63,6 @@ export default function Header(props: userInfo) {
 						) : (
 							<></>
 						)}
-						<SignOutUser />
 					</div>
 				</div>
 			)}
