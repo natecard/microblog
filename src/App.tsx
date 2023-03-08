@@ -46,7 +46,6 @@ export default function App() {
 		>
 			<Header displayName={''} profilePic={''} email={''} />
 			<Routes>
-				<Route path="/" element={<SignIn />}></Route>
 				<Route path="/home" element={<SignIn />}></Route>
 				<Route path="/timeline" element={<Timeline />}></Route>
 			</Routes>
