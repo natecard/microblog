@@ -1,6 +1,6 @@
-import {supabase} from '../supabaseClient';
-import {Context} from '../App';
-import React, {useContext} from 'react';
+import {supabase} from '../../supabaseClient';
+import {Context} from '../../App';
+import {useContext} from 'react';
 import {Link} from 'react-router-dom';
 export default function SignOutUser() {
 	const {user, setUser} = useContext(Context);

@@ -1,7 +1,7 @@
 import React, {useContext, useState, useEffect} from 'react';
 import {post, replies, userInfo} from './Interfaces';
-import {Context} from '../App';
-import {supabase} from '../supabaseClient';
+import {Context} from '../../App';
+import {supabase} from '../../supabaseClient';
 import {nanoid} from 'nanoid';
 
 export default function MicroBlog(props: post) {

@@ -1,8 +1,8 @@
-import React, {useContext, useEffect, useState} from 'react';
+import {useContext, useEffect} from 'react';
 import {post, replies, userInfo} from './Interfaces';
-import {Context} from '../App';
 import MicroBlog from './MicroBlog';
-import {supabase} from '../supabaseClient';
+import {Context} from '../../App';
+import {supabase} from '../../supabaseClient';
 import {nanoid} from 'nanoid';
 import Reply from './Reply';
 

@@ -1,8 +1,7 @@
-import React, {useContext} from 'react';
+import {useContext} from 'react';
 import {Link, useLocation} from 'react-router-dom';
 import {userInfo} from './Interfaces';
-import {Context} from '../App';
-import {supabase} from '../supabaseClient';
+import {Context} from '../../App';
 import SignOutUser from '../Auth/SignOutUser';
 
 export default function Header(props: userInfo) {

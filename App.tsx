@@ -1,13 +1,10 @@
-import React, {useEffect, useState, createContext} from 'react';
+import {useEffect, useState, createContext} from 'react';
 import {Route, Routes} from 'react-router-dom';
-import {supabase} from './supabaseClient';
-import SignIn from './Auth/SignIn';
-import {post, userInfo} from './Components/Interfaces';
-import Header from './Components/Header';
-import SignOutButton from './Auth/SignOutUser';
-import Timeline from './Components/Timeline';
-import Footer from './Components/Footer';
-
+import {post} from './src/Components/Interfaces';
+import Header from './src/Components/Header'
+import Footer from './src/Components/Footer'
+import Timeline from './src/Components/Timeline';
+import SignIn from './src/Auth/SignIn';
 export const Context = createContext<any>([]);
 
 export default function App() {
@@ -46,8 +43,8 @@ export default function App() {
 		>
 			<Header displayName={''} profilePic={''} email={''} />
 			<Routes>
-				<Route path="/home" element={<SignIn />}></Route>
-				<Route path="/timeline" element={<Timeline />}></Route>
+				<Route path="/home" element={<SignIn/>}></Route>
+				<Route path="/timeline" element={<Timeline/>}></Route>
 			</Routes>
 			<Footer />
 		</Context.Provider>

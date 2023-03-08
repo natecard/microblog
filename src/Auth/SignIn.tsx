@@ -1,7 +1,6 @@
-import React, {useContext, useEffect} from 'react';
-import {AuthUi, supabase} from '../supabaseClient';
-import SignOutUser from './SignOutUser';
-import {Context} from '../App';
+import {useContext, useEffect} from 'react';
+import {AuthUi, supabase} from '../../supabaseClient';
+import {Context} from '../../App';
 import {useNavigate} from 'react-router-dom';
 
 export default function SignIn() {
