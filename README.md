@@ -1,12 +1,23 @@
-Microblog
-Using TypeScript, React, Tailwind...
+# *Subforuma Microblog*
 
-Introducing our revolutionary microblogging service, the perfect platform for those who have a lot to say, but don't want to take up too much space. With our service, you can share your thoughts, ideas, and musings with your followers in bite-sized posts.
+Inspired by Twitter, this app was built using Vite, React, TypeScript, Supabase and CSS done using TailwindCSS
+[Live demo site](https://microblog-natecard.vercel.app)
+![timeline screenshot](https://user-images.githubusercontent.com/98140806/223824054-2b37be7a-c642-462b-ba65-c311197da048.png)
+![log in screenshot](https://user-images.githubusercontent.com/98140806/223824614-c6da0866-08d1-4c8a-8398-33a7030686df.png)
 
-Our service is designed to be simple and user-friendly, with an intuitive interface that allows you to quickly compose and share your posts. Whether you're on the go, or just looking to quickly update your followers, our microblogging service is the perfect solution.
+## Features
+- Toggle dark / light theme based on system theme
+- Create, reply, like public posts
+- PostgreSQL database and realtime functions
+- Responsive design
+- Google Sign In
+- Sign Out
+- Magic Link Sign In
 
-With our service, you can easily connect with like-minded individuals and engage with your followers, building a community of like-minded individuals who share your interests and passions. Plus, with the ability to follow other users, you can stay up to date with the latest trends and conversations in your areas of interest.
+For Google Sign In, I used Supabase Auth. This allowed for a good base to pull user data and display profile pictures, display names, etc to build out the basic "tweets" 
 
-Our microblogging service is perfect for influencers, thought leaders, entrepreneurs, and anyone who wants to share their ideas and opinions with the world. With our platform, you can easily build a following and establish yourself as an authority in your field.
+The PostgreSQL database from Supabase gave me the ability to build my own SQL functions to render the replies in the timeline. By doing this I was able to sort and sequence the replies by the number of likes that each had received, simulating a sort of social media algorithm promoting more liked content to the top of the replies. 
 
-So why wait? Sign up for our microblogging service today and start sharing your thoughts and ideas with the world!
+
+
+
