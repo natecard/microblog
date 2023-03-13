@@ -1,7 +1,5 @@
 export interface post {
 	fetchPosts(): void;
-	fetchReplies(): void;
-	renderReplies(): void;
 	post: any;
 	uuid: string;
 	author: string;
@@ -19,10 +17,7 @@ export interface userInfo {
 	uuid: string;
 }
 export interface replies {
-	replied_to: string;
 	fetchPosts(): void;
-	fetchReplies(): void;
-	renderReplies(): void;
 	post: post;
 	replies: Array<replies>;
 	reply: any;

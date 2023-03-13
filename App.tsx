@@ -5,8 +5,6 @@ import Header from './src/Components/Header'
 import Footer from './src/Components/Footer'
 import Timeline from './src/Components/Timeline';
 import SignIn from './src/Auth/SignIn';
-import { supabase } from './supabaseClient';
-
 export const Context = createContext<any>([]);
 
 export default function App() {
@@ -16,50 +14,18 @@ export default function App() {
 	const [repliesArray, setRepliesArray] = useState<any[]>([]);
 	const [postText, setPostText] = useState('');
 	const [replyText, setReplyText] = useState('');
-	
-	async function fetchPosts() {
-		let {data, error} = await supabase
-			.from('posts')
-			.select('*')
-			.order('timestamp', {ascending: false});
-		if (data) {
-			setPostsArray(data);
-		} else {
-			error;
-			console.error(error)
-		}
-	}
-		async function fetchReplies() {
-		let {data, error} = await supabase
-			.from('replies')
-			.select('*')
-			.order('likes', {ascending: false});
-		if (data) {
-			setRepliesArray(data);
-		} else {
-			error
-			console.error(error);
-			
-	}
-}
-	function renderReplies(){
-		replies.map(item => {
-			return {
-				author: item.author,
-				uuid: item.uuid,
-				profilePic: item.profilePic,
-				content: item.content,
-				likes: item.likes,
-				timestamp: item.timestamp,
-				repliedTo: item.replied_to,
-			};
-		})
-	}
-	useEffect(() =>{
-		fetchPosts()
-		renderReplies()
+	const [user, setUser] = useState(() => {
+		const item = sessionStorage.getItem('user');
+		return item ? JSON.parse(item) : [{name: '', email: '', profilePic: ''}];
+	});
+	useEffect(() => {
+		sessionStorage.setItem('user', JSON.stringify(user));
+	}, [user]);
+
+	useEffect(() => {
+		setUser({name: '', email: '', profilePic: ''})
 	},[])
-	
+
 	return (
 		<Context.Provider
 			value={{
@@ -77,9 +43,6 @@ export default function App() {
 				setReplies,
 				replyText,
 				setReplyText,
-				fetchPosts,
-				fetchReplies,
-				renderReplies,
 			}}
 		>
 			<Header displayName={''} profilePic={''} email={''} uuid={''} />

@@ -1,26 +1,12 @@
-import {createContext, useEffect, useState} from 'react';
+import {useContext, useEffect} from 'react';
 import {AuthUi, supabase} from '../../supabaseClient';
+import {Context} from '../../App';
 import {useNavigate} from 'react-router-dom';
 import Footer from '../Components/Footer';
-import { userInfo } from '../Components/Interfaces';
-
-export const userContext = createContext<userInfo>({
-	uuid: '',
-	displayName: '',
-	profilePic: '',
-	email: ''
-}
-);
+import React from 'react';
 
 export default function SignIn() {
-	const [user, setUser] = useState(() => {
-		const item = sessionStorage.getItem('user');
-		return item ? JSON.parse(item) : [{name: '', email: '', profilePic: '', uuid: ''}];
-	});
-	useEffect(() => {
-		sessionStorage.setItem('user', JSON.stringify(user));
-	}, [user]);
-
+	const {user, setUser} = useContext(Context);
 	let navigate = useNavigate();
 	supabase.auth.onAuthStateChange((event, session) => {
 		if (event == 'SIGNED_IN') {
@@ -30,7 +16,6 @@ export default function SignIn() {
 			navigate('/');
 		}
 	});
-
 
 	async function fetchUserData() {
 		const {data, error} = await supabase.auth.getUser();
@@ -55,14 +40,11 @@ export default function SignIn() {
 	useEffect(() => {
 		fetchUserData();
 	}, [user]);
-
-
+	useEffect(() => {
+		fetchUserData();
+	},[]);
 
 	return (
-		<div>
-		<Context.Provider>
-	<App/>
-</userContext.Provider>
 		<div className=" dark:text-white p-8 md:px-36 md:py-12 lg:px-72 lg:py-40 xl:px-96 xl:py-72  min-h-screen dark:bg-black">
 			<p className='text-xl'>If you don't want to create an account you can click on the Subforuma
 				header to view the timeline</p>
@@ -107,6 +89,5 @@ export default function SignIn() {
 			)}
 			<Footer/>
 		</div>
-		</div>		
 	);
 }

@@ -6,7 +6,6 @@ import SignOutUser from '../Auth/SignOutUser';
 
 export default function Header(props: userInfo) {
 	const {user} = useContext(Context);
-	const location = useLocation();
 
 	return (
 		<div

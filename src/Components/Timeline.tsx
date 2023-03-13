@@ -21,9 +21,6 @@ export default function Timeline() {
 		setRepliesArray,
 		replyText,
 		setReplyText,
-		fetchPosts,
-		fetchReplies,
-		renderReplies,
 	} = useContext(Context) as {
 		user: userInfo;
 		post: post[];
@@ -41,15 +38,41 @@ export default function Timeline() {
 		setRepliesArray: any;
 		alreadyClicked: boolean;
 		setAlreadyClicked: any;
-		renderReplies: Function;
-		fetchReplies: Function;
-		fetchPosts: Function;
 	};
+
 	
-	useEffect(() => {
-		fetchPosts();
-		renderReplies();
-	}, []);
+		async function fetchPosts() {
+			const {data, error} = await supabase
+				.from('posts')
+				.select('*')
+				.order('timestamp', {ascending: false});
+			if (data) {
+				setPostsArray(data);
+			}
+			let {data: replies, error: errors} = await supabase
+				.from('replies')
+				.select('*')
+				.order('likes', {ascending: false});
+			if (replies) {
+				setRepliesArray(
+					replies.map(item => {
+						return {
+							author: item.author,
+							uuid: item.uuid,
+							profilePic: item.profilePic,
+							content: item.content,
+							likes: item.likes,
+							timestamp: item.timestamp,
+							repliedTo: item.replied_to,
+						};
+					})
+				);
+			} else {
+				errors;
+				error;
+				console.error(error,errors);
+			}
+	}
 
 	useEffect(() => {
 		setReplies(
@@ -58,8 +81,7 @@ export default function Timeline() {
 				replies: repliesArray.filter(reply => reply.repliedTo == post.uuid),
 			}))
 		);
-		renderReplies();
-	}, [postsArray]);
+	}, [replies]);
 
 	async function savePost(event: any) {
 		event.preventDefault();
@@ -73,12 +95,13 @@ export default function Timeline() {
 			},
 		]);
 		fetchPosts();
-		fetchReplies();
-		renderReplies();
 		console.error(error);
 		setPostText('');
 	}
-	
+	useEffect(() => {
+		fetchPosts();
+	}, []);
+
 	return (
 		<div className="flex px-2 md:px-32 flex-col justify-center min-h-screen dark:bg-black bg-white w-screen dark:text-white text-black">
 			{user.displayName !== undefined || null ? (
@@ -114,7 +137,6 @@ export default function Timeline() {
 									post={post}
 									key={post.uuid}
 									fetchPosts={() => fetchPosts()}
-									fetchReplies={() => fetchReplies()}
 									uuid={post.uuid}
 									author={post.author}
 									profilePic={post.profilePic}
@@ -123,14 +145,12 @@ export default function Timeline() {
 									timestamp={post.timestamp}
 									replyText={replyText}
 									length={replies.length} 
-									renderReplies={renderReplies()}					/>
+									/>
 								{replies.map((reply: replies) => (
 									<Reply
 										reply={reply}
 										key={reply.uuid}
 										fetchPosts={() => fetchPosts()}
-										fetchReplies={() => fetchReplies()}
-										renderReplies={()=>renderReplies()}
 										uuid={reply.uuid}
 										author={reply.author}
 										profilePic={reply.profilePic}
@@ -141,7 +161,6 @@ export default function Timeline() {
 										repliedTo={''}
 										post={post}
 										replies={[]} 
-										replied_to={''}
 									/>
 								))}
 							</div>
