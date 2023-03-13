@@ -9,7 +9,14 @@ export default function SignOutUser() {
 		if (user.uuid !== '' || undefined) {
 			const {error} = await supabase.auth.signOut();
 			console.log('logged out');
+<<<<<<< HEAD
 			setUser({displayName: '', profilePic: '', uuid: '', email: ''});
+=======
+			sessionStorage.clear();
+			console.log('sessionStorage cleared');
+			localStorage.removeItem('user');
+			setUser({displayName: '', profilePic: '', uid: '', email: ''});
+>>>>>>> parent of 77b987d (Vite build and deploy)
 		} else {
 			console.log('No one is signed in!');
 		}

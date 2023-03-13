@@ -55,9 +55,6 @@ export default function SignIn() {
 	useEffect(() => {
 		fetchUserData();
 	}, [user]);
-	useEffect(() => {
-		fetchUserData();
-	},[]);
 
 
 
