@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import SignOutUser from '../Auth/SignOutUser';
-
+import { Context } from '../../App';
 export default function Footer() {
+	const {user} = useContext(Context)
 	return (
 		<div>
 			<div className=" flex justify-center items-center flex-row bg-white text-black dark:bg-black dark:text-white">
-				<SignOutUser />
+				{user.uuid == '' ? <></>: <SignOutUser />}
 				<a className="p-4 flex flex-row" href="http://www.github.com/natecard">
 					<svg
 						className="dark:fill-white fill-black"

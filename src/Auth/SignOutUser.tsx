@@ -6,10 +6,10 @@ export default function SignOutUser() {
 	const {user, setUser} = useContext(Context);
 	async function signOutActiveUser() {
 		// Sign out of Supabase.
-		if (user !== null || undefined) {
+		if (user.uuid !== '' || undefined) {
 			const {error} = await supabase.auth.signOut();
 			console.log('logged out');
-			setUser({displayName: '', profilePic: '', uid: '', email: ''});
+			setUser({displayName: '', profilePic: '', uuid: '', email: ''});
 		} else {
 			console.log('No one is signed in!');
 		}

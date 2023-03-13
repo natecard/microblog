@@ -39,6 +39,8 @@ export default function MicroBlog(props: post) {
 		setReplyText('');
 		textAreaToggle();
 		props.fetchPosts();
+		props.fetchReplies()
+		props.renderReplies();
 		
 		console.error(error);
 	}
@@ -57,7 +59,6 @@ export default function MicroBlog(props: post) {
 			if (error) console.error(error);
 		}
 		props.fetchPosts();
-		
 	}
 
 	function textAreaToggle() {

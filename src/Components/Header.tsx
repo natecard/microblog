@@ -54,14 +54,18 @@ export default function Header(props: userInfo) {
 						</div>
 					</div>
 					<div className="align-baseline flex flex-row dark:bg-black dark:text-white text-black">
-						{user.profilePic ? (
+						{user.uuid ? (
 							<img
 								alt="user profile picture"
 								className="w-10 h-10 rounded-full"
 								src={user.profilePic}
 							/>
 						) : (
-							<></>
+							<Link to='/'>
+							<button>
+								Sign In
+							</button>
+							</Link>
 						)}
 					</div>
 				</div>

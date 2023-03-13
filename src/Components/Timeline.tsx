@@ -23,6 +23,7 @@ export default function Timeline() {
 		setReplyText,
 		fetchPosts,
 		fetchReplies,
+		renderReplies,
 	} = useContext(Context) as {
 		user: userInfo;
 		post: post[];
@@ -40,14 +41,15 @@ export default function Timeline() {
 		setRepliesArray: any;
 		alreadyClicked: boolean;
 		setAlreadyClicked: any;
-		fetchPosts: Function;
+		renderReplies: Function;
 		fetchReplies: Function;
+		fetchPosts: Function;
 	};
 	
 	useEffect(() => {
-		fetchReplies();
 		fetchPosts();
-	}, [postsArray]);
+		renderReplies();
+	}, []);
 
 	useEffect(() => {
 		setReplies(
@@ -56,6 +58,7 @@ export default function Timeline() {
 				replies: repliesArray.filter(reply => reply.repliedTo == post.uuid),
 			}))
 		);
+		renderReplies();
 	}, [postsArray]);
 
 	async function savePost(event: any) {
@@ -70,13 +73,12 @@ export default function Timeline() {
 			},
 		]);
 		fetchPosts();
+		fetchReplies();
+		renderReplies();
 		console.error(error);
 		setPostText('');
 	}
-	useEffect(() => {
-		fetchPosts();
-	}, []);
-
+	
 	return (
 		<div className="flex px-2 md:px-32 flex-col justify-center min-h-screen dark:bg-black bg-white w-screen dark:text-white text-black">
 			{user.displayName !== undefined || null ? (
@@ -112,6 +114,7 @@ export default function Timeline() {
 									post={post}
 									key={post.uuid}
 									fetchPosts={() => fetchPosts()}
+									fetchReplies={() => fetchReplies()}
 									uuid={post.uuid}
 									author={post.author}
 									profilePic={post.profilePic}
@@ -119,13 +122,15 @@ export default function Timeline() {
 									likes={post.likes}
 									timestamp={post.timestamp}
 									replyText={replyText}
-									length={replies.length}
-								/>
+									length={replies.length} 
+									renderReplies={renderReplies()}					/>
 								{replies.map((reply: replies) => (
 									<Reply
 										reply={reply}
 										key={reply.uuid}
 										fetchPosts={() => fetchPosts()}
+										fetchReplies={() => fetchReplies()}
+										renderReplies={()=>renderReplies()}
 										uuid={reply.uuid}
 										author={reply.author}
 										profilePic={reply.profilePic}
@@ -135,7 +140,8 @@ export default function Timeline() {
 										replyText={replyText}
 										repliedTo={''}
 										post={post}
-										replies={[]}
+										replies={[]} 
+										replied_to={''}
 									/>
 								))}
 							</div>
