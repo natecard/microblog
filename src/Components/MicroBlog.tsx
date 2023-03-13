@@ -38,10 +38,7 @@ export default function MicroBlog(props: post) {
 		]);
 		setReplyText('');
 		textAreaToggle();
-		props.fetchPosts();
-		props.fetchReplies()
-		props.renderReplies();
-		
+		props.fetchPosts();		
 		console.error(error);
 	}
 	async function likePost(uuid: string) {

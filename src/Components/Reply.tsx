@@ -57,14 +57,12 @@ export default function Reply(props: replies) {
 			if (error) console.error(error);
 		}
 		props.fetchPosts();
-		props.fetchReplies()
-		props.renderReplies()
 		
 	}
 
 	function textAreaToggle() {
 		setShowTextArea((prevVal: boolean) => !prevVal);
-		props.renderReplies()
+		
 	}
 	return (
 		<div className="flex flex-col place-items-end justify-center">
