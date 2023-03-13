@@ -5,8 +5,6 @@ import Header from './src/Components/Header'
 import Footer from './src/Components/Footer'
 import Timeline from './src/Components/Timeline';
 import SignIn from './src/Auth/SignIn';
-import { supabase } from './supabaseClient';
-
 export const Context = createContext<any>([]);
 
 export default function App() {
@@ -16,6 +14,7 @@ export default function App() {
 	const [repliesArray, setRepliesArray] = useState<any[]>([]);
 	const [postText, setPostText] = useState('');
 	const [replyText, setReplyText] = useState('');
+<<<<<<< HEAD
 	
 	async function fetchPosts() {
 		let {data, error} = await supabase
@@ -60,6 +59,16 @@ export default function App() {
 		renderReplies()
 	},[])
 	
+=======
+	const [user, setUser] = useState(() => {
+		const item = sessionStorage.getItem('user');
+		return item ? JSON.parse(item) : [{name: '', email: '', profilePic: ''}];
+	});
+	useEffect(() => {
+		sessionStorage.setItem('user', JSON.stringify(user));
+	}, [user]);
+
+>>>>>>> parent of 7ffafbd (Refined fetch calls)
 	return (
 		<Context.Provider
 			value={{
@@ -77,9 +86,12 @@ export default function App() {
 				setReplies,
 				replyText,
 				setReplyText,
+<<<<<<< HEAD
 				fetchPosts,
 				fetchReplies,
 				renderReplies,
+=======
+>>>>>>> parent of 7ffafbd (Refined fetch calls)
 			}}
 		>
 			<Header displayName={''} profilePic={''} email={''} uuid={''} />

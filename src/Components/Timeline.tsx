@@ -21,9 +21,12 @@ export default function Timeline() {
 		setRepliesArray,
 		replyText,
 		setReplyText,
+<<<<<<< HEAD
 		fetchPosts,
 		fetchReplies,
 		renderReplies,
+=======
+>>>>>>> parent of 7ffafbd (Refined fetch calls)
 	} = useContext(Context) as {
 		user: userInfo;
 		post: post[];
@@ -41,15 +44,54 @@ export default function Timeline() {
 		setRepliesArray: any;
 		alreadyClicked: boolean;
 		setAlreadyClicked: any;
+<<<<<<< HEAD
 		renderReplies: Function;
 		fetchReplies: Function;
 		fetchPosts: Function;
+=======
+>>>>>>> parent of 7ffafbd (Refined fetch calls)
 	};
+
 	
+<<<<<<< HEAD
 	useEffect(() => {
 		fetchPosts();
 		renderReplies();
 	}, []);
+=======
+		async function fetchPosts() {
+			const {data, error} = await supabase
+				.from('posts')
+				.select('*')
+				.order('timestamp', {ascending: false});
+			if (data) {
+				setPostsArray(data);
+			}
+			let {data: replies, error: errors} = await supabase
+				.from('replies')
+				.select('*')
+				.order('likes', {ascending: false});
+			if (replies) {
+				setRepliesArray(
+					replies.map(item => {
+						return {
+							author: item.author,
+							uuid: item.uuid,
+							profilePic: item.profilePic,
+							content: item.content,
+							likes: item.likes,
+							timestamp: item.timestamp,
+							repliedTo: item.replied_to,
+						};
+					})
+				);
+			} else {
+				errors;
+				error;
+				console.error(error,errors);
+			}
+	}
+>>>>>>> parent of 7ffafbd (Refined fetch calls)
 
 	useEffect(() => {
 		setReplies(
